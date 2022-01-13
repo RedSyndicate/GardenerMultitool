@@ -20,9 +20,12 @@ namespace GardenersMultitool.Domain.ValueObjects
             Unit = unit;
         }
 
+        public static Temperature operator -(Temperature a, Temperature b) => new Temperature(a.Value - b.Value, a.Unit);
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Unit;
+            yield return Value;
         }
     }
 }
