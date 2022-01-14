@@ -27,5 +27,18 @@ namespace GardenersMultitool.Domain.Tests
             plot.Needs.HasFlag(PlotNeeds.NitrogenFixer).ShouldBeFalse();
         }
 
+        [Fact]
+        public void Plot2()
+        {
+            var plant = new Plant("Comfrey", PlotNeeds.NitrogenFixer | PlotNeeds.Shrub);
+            var plant2 = new Plant("BaconWillow", PlotNeeds.groundCover | PlotNeeds.Overstory);
+            PlotTemplates.Templates.TryGetValue(PlotTemplate.SoilFixer, out var plot);
+            plot.AddPlant(plant);
+            plot.AddPlant(plant2);
+            plot.Plants.Count.ShouldBe(2);
+            plot.Needs.HasFlag(PlotNeeds.NitrogenFixer).ShouldBeFalse();
+            plot.Needs.HasFlag(PlotNeeds.Overstory).ShouldBeFalse();
+        }
+
     }
 }
