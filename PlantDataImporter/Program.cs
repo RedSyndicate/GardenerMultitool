@@ -14,18 +14,16 @@ namespace PlantDataImporter
 
         static void Main(string[] args)
         {
-            //if (args.Length == 0)
-            //    return;
-
-            //var path = args[0];
-
-            //if (string.IsNullOrEmpty(path))
-            //    return;
+            if (args.Length < 2)
+                return;
 
 
             //make list of file names (Annuals, aquatics, etc) iterate through list[]
-            var csvFolder = @"D:\ZainGit\RedSyndicateStuff\PermacultureData\CSV";
-            var jsonFolder = @"D:\ZainGit\RedSyndicateStuff\PermacultureData\JSON";
+            //var csvFolder = @"D:\ZainGit\RedSyndicateStuff\PermacultureData\CSV";
+            //var jsonFolder = @"D:\ZainGit\RedSyndicateStuff\PermacultureData\JSON";
+            var csvFolder = args[0];
+            var jsonFolder = args[1];
+
             var files = Directory.GetFiles(csvFolder);
 
             //make records list
@@ -35,18 +33,15 @@ namespace PlantDataImporter
             //json serialize the records list (collection)
             foreach (var file in files)
             {
+                using var reader = new StreamReader(Path.Combine(csvFolder, file));
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-                using (var reader = new StreamReader(Path.Combine(csvFolder, file)))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                var records = csv.GetRecords<Plant>();
+                foreach (var record in records)
                 {
-                    var records = csv.GetRecords<Plant>();
-                    foreach (var record in records)
-                    {
-                        plants.Add(record);
-                        Console.WriteLine($"{record.Name}");                       
-                    }
-                 }
-                
+                    plants.Add(record);
+                    Console.WriteLine($"{record.Name}");                       
+                }
             }
 
             var json = JsonConvert.SerializeObject(plants);
