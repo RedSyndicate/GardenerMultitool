@@ -6,8 +6,8 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ChemicalDet
 {
     public static class ChemicalDeterrents
     {
-        public static IChemicalDeterrent Create(string sunRequirementStr) =>
-            sunRequirementStr.ToLowerInvariant() switch
+        public static IChemicalDeterrent Create(string chemicalDeterrent) =>
+            chemicalDeterrent.ToLowerInvariant() switch
             {
                 "fungicide" => new Fungicide(),
                 "herbicide" => new Herbicide(),

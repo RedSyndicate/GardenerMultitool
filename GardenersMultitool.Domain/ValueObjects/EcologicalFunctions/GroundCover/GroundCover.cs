@@ -8,8 +8,8 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.GroundCover
     {
         public string Label => "Ground Cover";
 
-        public static IGroundCover Create(string animalForage) =>
-            animalForage.ToLowerInvariant() switch
+        public static IGroundCover Create(string groundCover) =>
+            groundCover.ToLowerInvariant() switch
             {
                 "ground cover" => new GroundCover(),
                 _ => throw new ArgumentException()
