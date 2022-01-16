@@ -4,9 +4,9 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ChemicalDeterrents
 {
-    public class ChemicalDeterrents
+    public static class ChemicalDeterrents
     {
-        public IChemicalDeterrent Create(string sunRequirementStr) =>
+        public static IChemicalDeterrent Create(string sunRequirementStr) =>
             sunRequirementStr.ToLowerInvariant() switch
             {
                 "fungicide" => new Fungicide(),

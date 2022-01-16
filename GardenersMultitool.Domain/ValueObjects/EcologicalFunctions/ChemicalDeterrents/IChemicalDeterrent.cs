@@ -1,6 +1,6 @@
 ﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ChemicalDeterrents
 {
-    public interface IChemicalDeterrent
+    public interface IChemicalDeterrent : IPlantAttribute
     {
     }
 }

@@ -4,9 +4,9 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Barrier
 {
-    public class Barriers
+    public static class Barriers
     {
-        public IBarrier Create(string barrierStr) =>
+        public static IBarrier Create(string barrierStr) =>
             barrierStr.ToLowerInvariant() switch
             {
                 "chemical barrier" => new ChemicalBarrier(),
@@ -33,7 +33,7 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Barrier
     }
     public class WindBreak : ValueObject, IBarrier
     {
-        public string Label => "WindBreak";
+        public string Label => "Wind Break";
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Label;

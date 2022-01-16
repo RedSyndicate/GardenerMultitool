@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using CsvHelper.Configuration.Attributes;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace GardenersMultitool.Domain.ValueObjects
 {
