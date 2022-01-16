@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CSharpFunctionalExtensions;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
 
@@ -28,7 +29,7 @@ namespace GardenersMultitool.Domain.ValueObjects
         public string LightRequired{ get; set; }
         public string HardinessZone { get; set; }
         public string SoilMoisture { get; set; }
-        public string SoilPH { get; set; }
+        public Maybe<pH> SoilPH { get; set; }
         public List<IEcologicalFunction> EcologicalFunction { get; set; }
         public List<IHumanUse> HumanUse { get; set; }
     }

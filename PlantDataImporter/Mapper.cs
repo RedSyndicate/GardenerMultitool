@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CSharpFunctionalExtensions;
 using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
@@ -18,9 +19,17 @@ namespace PlantDataImporter
             plant.HumanUse = plantDto.HumanUseCrop.Split(',')
                 .Select(x => x.Trim())
                 .Aggregate(new List<IHumanUse>(), AggregateHumanUses);
+            plant.Binomial = plantDto.Binomial;
+            if(!string.IsNullOrEmpty(plantDto.SoilPH))
+                plant.SoilPH = plantDto.SoilPH.Split('-').Select(x => x.Trim()).topH();
             //TODO: mappy mappy
             return plant;
         }
+
+        private static Maybe<pH> topH(this IEnumerable<string> soilpHTokens) => 
+            soilpHTokens.Count() < 2 
+                ? Maybe.None
+                : new pH(decimal.Parse(soilpHTokens.ElementAt(0)), decimal.Parse(soilpHTokens.ElementAt(1)));
 
         private static List<IEcologicalFunction> AggregateEcologicalFunctions(List<IEcologicalFunction> list, string function)
         {
