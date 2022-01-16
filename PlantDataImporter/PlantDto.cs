@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using CSharpFunctionalExtensions;
-using CsvHelper.Configuration.Attributes;
-using GardenersMultitool.Domain;
+﻿using CsvHelper.Configuration.Attributes;
 
 namespace PlantDataImporter
 {
-    public class PlantDto : ValueObject
+    public class PlantDto
     {
         //Properties modelled after .csv
         public int Id { get; set; }
@@ -50,55 +47,10 @@ namespace PlantDataImporter
         [Name("Human Use/Crop")]
         public string HumanUseCrop { get; set; }
 
-        public PlotNeeds Functions { get; }
 
         public override string ToString()
         {
             return $"Object Id:{Id}, Name: {Name}.";
-        }
-
-        public PlantDto()
-        {
-
-        }
-
-        public PlantDto(string name, PlotNeeds needs)
-        {
-            Name = name;
-            Functions = needs;
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-
-            yield return Id;
-            yield return Name;
-            //yield return Height;
-            //yield return ScientificName;
-            //yield return Binomial;
-            //yield return PlantType;
-            //yield return Height;
-            //yield return Spread;
-            //yield return RootDepth;
-            //yield return SeasonalInterest;
-            //yield return Notes;
-            //yield return FlowerColor;
-            //yield return RootType;
-            //yield return BloomTime;
-            //yield return FruitTime;
-            //yield return Texture;
-            //yield return Form;
-            //yield return GrowthRate;
-            //yield return InsectPredation;
-            //yield return Disease;
-            //yield return LightRequired;
-            //yield return HardinessZone;
-            //yield return SoilMoisture;
-            //yield return SoilPH;
-            //yield return EcologicalFunction;
-            //yield return HumanUseCrop;
-            //yield return PlotNeeds;
-
         }
     }
 }

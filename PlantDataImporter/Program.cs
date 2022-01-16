@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace PlantDataImporter
 {
@@ -26,7 +27,7 @@ namespace PlantDataImporter
             var files = Directory.GetFiles(csvFolder);
 
             //make records list
-            var plants = new List<PlantDto>();
+            var plants = new List<Plant>();
 
 
             //json serialize the records list (collection)
@@ -36,15 +37,11 @@ namespace PlantDataImporter
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
                 var records = csv.GetRecords<PlantDto>();
-                foreach (var record in records)
-                {
-                    plants.Add(record);
-                    Console.WriteLine($"{record.Name}");                       
-                }
+                plants.AddRange(records.Select(PlantMapper.Map));
             }
 
             var json = JsonConvert.SerializeObject(plants);
-            var allPlants = JsonConvert.DeserializeObject<List<PlantDto>>(json);
+            var allPlants = JsonConvert.DeserializeObject<List<Plant>>(json);
 
 
             File.WriteAllText(Path.Combine(jsonFolder, "plants.json"), json);
