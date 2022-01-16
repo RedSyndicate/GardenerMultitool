@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <Folder Include="UseCases\" />
+    <Folder Include="ValueObjects\HumanUses\AromaticsFragrance\" />
+    <Folder Include="ValueObjects\HumanUses\Biomass\" />
+    <Folder Include="ValueObjects\HumanUses\CleanserScourer\" />
   </ItemGroup>
 
   <ItemGroup>
