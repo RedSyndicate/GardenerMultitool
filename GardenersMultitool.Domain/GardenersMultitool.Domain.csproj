@@ -9,6 +9,7 @@
     <Folder Include="ValueObjects\HumanUses\AromaticsFragrance\" />
     <Folder Include="ValueObjects\HumanUses\Biomass\" />
     <Folder Include="ValueObjects\HumanUses\CleanserScourer\" />
+    <Folder Include="ValueObjects\Scheduling\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,10 +1,6 @@
-﻿
-
-
-
-namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Medicine
+﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Medicine
 {
-    public interface IMedicine : IPlantAttribute
+    public interface IMedicine : IPlantAttribute, IHumanUse
     {
     }
 }

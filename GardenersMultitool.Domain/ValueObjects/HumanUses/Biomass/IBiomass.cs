@@ -1,6 +1,6 @@
 ﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Biomass
 {
-    public interface IBiomass : IPlantAttribute
+    public interface IBiomass : IPlantAttribute, IHumanUse
     {
     }
 }

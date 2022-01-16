@@ -26,7 +26,7 @@ namespace PlantDataImporter
             var files = Directory.GetFiles(csvFolder);
 
             //make records list
-            var plants = new List<Plant>();
+            var plants = new List<PlantDto>();
 
 
             //json serialize the records list (collection)
@@ -35,7 +35,7 @@ namespace PlantDataImporter
                 using var reader = new StreamReader(Path.Combine(csvFolder, file));
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-                var records = csv.GetRecords<Plant>();
+                var records = csv.GetRecords<PlantDto>();
                 foreach (var record in records)
                 {
                     plants.Add(record);
@@ -44,7 +44,7 @@ namespace PlantDataImporter
             }
 
             var json = JsonConvert.SerializeObject(plants);
-            var allPlants = JsonConvert.DeserializeObject<List<Plant>>(json);
+            var allPlants = JsonConvert.DeserializeObject<List<PlantDto>>(json);
 
 
             File.WriteAllText(Path.Combine(jsonFolder, "plants.json"), json);

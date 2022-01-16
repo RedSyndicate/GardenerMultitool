@@ -1,6 +1,6 @@
 ﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.CleanserScourer
 {
-    public interface ICleanserScourer : IPlantAttribute
+    public interface ICleanserScourer : IPlantAttribute, IHumanUse
     {
     }
 }
