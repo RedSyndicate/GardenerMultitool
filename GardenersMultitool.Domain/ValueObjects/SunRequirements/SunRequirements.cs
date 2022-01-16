@@ -4,9 +4,9 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.SunRequirements
 {
-    public class SunRequirements
+    public static class SunRequirements
     {
-        public ISunRequirement Create(string sunRequirementStr) =>
+        public static ISunRequirement Create(string sunRequirementStr) =>
             sunRequirementStr.ToLowerInvariant() switch
             {
                 "full_sun" => new FullSun(),
