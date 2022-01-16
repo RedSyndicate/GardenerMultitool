@@ -1,4 +1,4 @@
-﻿namespace GardenersMultitool.Domain.ValueObjects.SunRequirements
+namespace GardenersMultitool.Domain.ValueObjects.SunRequirements
 {
     public interface ISunRequirement : IPlantAttribute
     {

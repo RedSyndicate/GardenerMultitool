@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.SoilMoistures
 {
-    public class SoilMoisture
+    public class SoilMoistures
     {
         public ISoilMoisture Create(string sunRequirementStr) =>
             sunRequirementStr.ToLowerInvariant() switch
