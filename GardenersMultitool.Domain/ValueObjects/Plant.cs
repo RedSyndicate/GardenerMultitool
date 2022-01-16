@@ -69,6 +69,7 @@ namespace GardenersMultitool.Domain.ValueObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
+
             yield return Id;
             yield return Name;
             //yield return Height;

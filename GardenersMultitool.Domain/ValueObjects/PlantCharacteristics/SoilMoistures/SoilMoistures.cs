@@ -2,41 +2,42 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
-namespace GardenersMultitool.Domain.ValueObjects.SunRequirements
+namespace GardenersMultitool.Domain.ValueObjects.PlantCharacteristics.SoilMoistures
 {
-    public static class SunRequirements
+    public class SoilMoistures
     {
-        public static ISunRequirement Create(string sunRequirementStr) =>
+        public ISoilMoisture Create(string sunRequirementStr) =>
             sunRequirementStr.ToLowerInvariant() switch
             {
-                "full_sun" => new FullSun(),
-                "partial_shade" => new PartialShade(),
-                "shade" => new Shade(),
+                "Wet" => new Wet(),
+                "Moderate" => new Moderate(),
+                "Dry" => new Dry(),
                 _ => throw new ArgumentException()
             };
     }
-    public class FullSun : ValueObject, ISunRequirement
+    public class Wet : ValueObject, ISoilMoisture
     {
-        public string Label => "Full Sun";
+        public string Label => "Wet";
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Label;
         }
     }
-    public class PartialShade : ValueObject, ISunRequirement
+    public class Moderate : ValueObject, ISoilMoisture
     {
-        public string Label => "Partial Shade";
+        public string Label => "Moderate";
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Label;
         }
     }
-    public class Shade : ValueObject, ISunRequirement
+    public class Dry : ValueObject, ISoilMoisture
     {
-        public string Label => "Shade";
+        public string Label => "Dry";
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Label;
         }
     }
+
 }
