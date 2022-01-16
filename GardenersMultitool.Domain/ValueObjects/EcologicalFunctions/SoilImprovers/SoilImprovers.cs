@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
-namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Repellent
+namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.SoilImprovers
 {
     public class SoilImprovers
     {
