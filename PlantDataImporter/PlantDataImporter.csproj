@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Permaculture_Plant_CSVs\**" />
+    <EmbeddedResource Remove="Permaculture_Plant_CSVs\**" />
+    <None Remove="Permaculture_Plant_CSVs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
