@@ -1,4 +1,4 @@
-﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Repellent
+﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.SoilImprovers
 {
     public interface ISoilImprover : IPlantAttribute
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using GardenersMultitool.Domain.ValueObjects.HumanUses.CutFlower;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.DriedFlower
 {
