@@ -1,6 +1,6 @@
 ﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ErosionControl
 {
-    public interface IErosionControl : IPlantAttribute
+    public interface IErosionControl : IPlantAttribute, IEcologicalFunction
     {
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Dye
 {
-    public interface IDye : IPlantAttribute
+    public interface IDye : IPlantAttribute, IHumanUse
     {
     }
 }

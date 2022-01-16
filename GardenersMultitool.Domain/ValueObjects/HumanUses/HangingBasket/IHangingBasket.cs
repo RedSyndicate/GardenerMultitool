@@ -1,8 +1,6 @@
-﻿
-
-namespace GardenersMultitool.Domain.ValueObjects.HumanUses.HangingBasket
+﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.HangingBasket
 {
-    public interface IHangingBasket : IPlantAttribute
+    public interface IHangingBasket : IPlantAttribute, IHumanUse
     {
     }
 }

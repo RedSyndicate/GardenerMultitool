@@ -1,10 +1,6 @@
-﻿
-
-
-
-namespace GardenersMultitool.Domain.ValueObjects.HumanUses.InsectRepellent
+﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.InsectRepellent
 {
-    public interface IInsectRepellent : IPlantAttribute
+    public interface IInsectRepellent : IPlantAttribute, IHumanUse
     {
     }
 }

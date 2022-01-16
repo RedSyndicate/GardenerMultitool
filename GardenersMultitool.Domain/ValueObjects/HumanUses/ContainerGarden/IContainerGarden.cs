@@ -1,6 +1,6 @@
 ﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.ContainerGarden
 {
-    public interface IContainerGarden : IPlantAttribute
+    public interface IContainerGarden : IPlantAttribute, IHumanUse
     {
     }
 }
