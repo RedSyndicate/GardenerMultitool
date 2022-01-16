@@ -1,6 +1,6 @@
-﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Repellent
+﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Wildlife
 {
-    public interface IWildlife : IPlantAttribute
+    public interface IWildlife : IPlantAttribute, IEcologicalFunction
     {
         
     }

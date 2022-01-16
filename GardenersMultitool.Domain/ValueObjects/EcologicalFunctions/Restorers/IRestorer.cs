@@ -1,6 +1,6 @@
-﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Repellent
+﻿namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Restorers
 {
-    public interface IRestorer : IPlantAttribute
+    public interface IRestorer : IPlantAttribute, IEcologicalFunction
     {
         
     }

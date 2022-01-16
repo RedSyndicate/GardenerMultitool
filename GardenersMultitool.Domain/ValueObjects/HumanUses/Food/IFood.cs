@@ -1,7 +1,6 @@
-﻿
-namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Food
+﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Food
 {
-    public interface IFood : IPlantAttribute
+    public interface IFood : IPlantAttribute, IHumanUse
     {
     }
 }

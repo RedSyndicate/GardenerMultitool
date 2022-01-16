@@ -1,6 +1,6 @@
-﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.DriedFlower
+namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Dried
 {
-    public interface IDriedFlower : IPlantAttribute
+    public interface IDriedFlower : IPlantAttribute, IHumanUse
     {
     }
 }

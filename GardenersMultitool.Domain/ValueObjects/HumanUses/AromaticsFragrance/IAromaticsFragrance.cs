@@ -2,7 +2,7 @@
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.AromaticsFragrance
 {
-    public interface IAromaticsFragrance : IPlantAttribute
+    public interface IAromaticsFragrance : IPlantAttribute, IHumanUse
     {
     }
 }

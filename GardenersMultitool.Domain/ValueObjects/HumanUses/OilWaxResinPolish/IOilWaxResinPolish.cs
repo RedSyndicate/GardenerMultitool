@@ -1,10 +1,6 @@
-﻿
-
-
-
-namespace GardenersMultitool.Domain.ValueObjects.HumanUses.OilWaxResinPolish
+﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.OilWaxResinPolish
 {
-    public interface IOilWaxResinPolish : IPlantAttribute
+    public interface IOilWaxResinPolish : IPlantAttribute, IHumanUse
     {
     }
 }

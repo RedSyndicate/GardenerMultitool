@@ -1,9 +1,6 @@
-﻿
-
-
-namespace GardenersMultitool.Domain.ValueObjects.HumanUses.InsecticideSpray
+﻿namespace GardenersMultitool.Domain.ValueObjects.HumanUses.InsecticideSpray
 {
-    public interface IInsecticideSpray : IPlantAttribute
+    public interface IInsecticideSpray : IPlantAttribute, IHumanUse
     {
     }
 }
