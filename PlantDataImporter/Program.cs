@@ -22,16 +22,14 @@ namespace PlantDataImporter
         {
             _config = Config;
         }
+
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length < 1)
                 return;
 
             var mapper = _config.CreateMapper();
 
-            //make list of file names (Annuals, aquatics, etc) iterate through list[]
-            //var csvFolder = @"D:\ZainGit\RedSyndicateStuff\PermacultureData\CSV";
-            //var jsonFolder = @"D:\ZainGit\RedSyndicateStuff\PermacultureData\JSON";
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
 
             var csvFolder = Path.Combine(directory, args[0]);
@@ -40,7 +38,6 @@ namespace PlantDataImporter
             //make records list
             var plants = new List<Plant>();
 
-            //json serialize the records list (collection)
             foreach (var file in files)
             {
                 using var reader = new StreamReader(Path.Combine(csvFolder, file));
@@ -55,8 +52,10 @@ namespace PlantDataImporter
 
         private static MapperConfiguration Config => new(cfg =>
                 cfg.CreateMap<PlantDto, Plant>()
+                    .ForMember(dest => dest.PlantType, opt => opt.MapFrom(src =>
+                        src.PlantType.ToLowerInvariant().ToPlantType()))
                     .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
-                        src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).topH()))
+                        src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).TopH()))
                     .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
                         src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                             .Select(Clean)
