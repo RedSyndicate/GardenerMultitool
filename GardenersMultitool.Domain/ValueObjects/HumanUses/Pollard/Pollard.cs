@@ -1,19 +1,17 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Pollard
 {
-    public class Pollard : ValueObject, IPollard
+    public class Pollard : ValueObject, IPollard, IHumanUseFactory
     {
         public string Label => "Pollard";
 
         public static IPollard Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Pollard" => new Pollard(),
+                "pollard" => new Pollard(),
                 _ => throw new ArgumentException()
             };
 

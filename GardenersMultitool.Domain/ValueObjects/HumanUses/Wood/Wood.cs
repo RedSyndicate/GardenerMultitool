@@ -1,21 +1,17 @@
-﻿
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Wood
 {
-    public class Wood : ValueObject, IWood
+    public class Wood : ValueObject, IWood, IHumanUseFactory
     {
         public string Label => "Wood";
 
         public static IWood Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Wood" => new Wood(),
+                "wood" => new Wood(),
                 _ => throw new ArgumentException()
             };
 

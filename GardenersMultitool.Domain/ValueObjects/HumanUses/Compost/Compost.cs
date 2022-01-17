@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Compost
 {
-    public class Compost : ValueObject, IContainerGarden
+    public class Compost : ValueObject, IContainerGarden, IHumanUseFactory
     {
         public string Label => "Compost";
 
         public static IContainerGarden Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Compost" => new Compost(),
+                "compost" => new Compost(),
                 _ => throw new ArgumentException()
             };
 

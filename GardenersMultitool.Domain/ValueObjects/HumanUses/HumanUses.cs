@@ -6,8 +6,8 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
 {
     public static class HumanUses
     {
-        private static readonly Dictionary<HumanUse, Func<string, IHumanUse>> _factoryFunctions;
-        private static readonly Dictionary<string, HumanUse> _enumMap;
+        private static readonly Dictionary<HumanUse, Func<string, IHumanUse>> FactoryFunctions;
+        private static readonly Dictionary<string, HumanUse> EnumMap;
 
         static HumanUses()
         {
@@ -19,12 +19,12 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
 
             try
             {
-                _factoryFunctions = AppDomain.CurrentDomain.GetAssemblies()
+                var factoryFunctionTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(assembly => assembly.GetTypes())
                     .Where(type => !type.IsInterface && !type.IsAbstract)
                     .Where(type => type.IsClass)
-                    .Where(type => type.IsAssignableTo(typeof(IHumanUseFactory)))
-                    .ToDictionary(KeySelector, ElementSelector);
+                    .Where(type => type.IsAssignableTo(typeof(IHumanUseFactory)));
+                    FactoryFunctions = factoryFunctionTypes.ToDictionary(KeySelector, ElementSelector);
             }
             catch (Exception e)
             {
@@ -32,7 +32,7 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
                 throw;
             }
 
-            _enumMap = Enum.GetValues<HumanUse>()
+            EnumMap = Enum.GetValues<HumanUse>()
                 .Aggregate(new Dictionary<string, HumanUse>(), AggregateToFunctionsMap);
         }
 
@@ -48,11 +48,11 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
 
         public static IHumanUse Create(string humanUse)  
         {
-            Console.WriteLine($"Creating Ecological humanUse Object: {humanUse}.");
+            Console.WriteLine($"Creating Human Use Object: {humanUse}.");
             var loweredStr = humanUse.ToLowerInvariant();
 
-            if (_enumMap.TryGetValue(loweredStr, out var humanUseEnum))
-                return _factoryFunctions[humanUseEnum](loweredStr);
+            if (EnumMap.TryGetValue(loweredStr, out var humanUseEnum))
+                return FactoryFunctions[humanUseEnum](loweredStr);
 
             Console.WriteLine($"Could not find key: {loweredStr}");
             throw new ArgumentException(humanUse);
@@ -81,10 +81,46 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
         {
             [HumanUse("aromatics/fragrance")]
             AromaticsFragrance,
+            [HumanUse("biomass")]
             Biomass,
+            [HumanUse("cleanser/scourer")]
             CleanserScourer,
+            [HumanUse("compost")]
             Compost,
-            ContainerGarden
+            [HumanUse("container garden")]
+            ContainerGarden,
+            [HumanUse("coppice")]
+            Coppice,
+            [HumanUse("cut flower")]
+            CutFlower,
+            [HumanUse("dried flower")]
+            DriedFlower,
+            [HumanUse("dye")]
+            Dye,
+            [HumanUse("essential oil")]
+            EssentialOil,
+            [HumanUse("fiber")]
+            Fiber,
+            [HumanUse("food")]
+            Food,
+            [HumanUse("hanging basket")]
+            HangingBasket,
+            [HumanUse("insecticide")]
+            InsecticideSpray,
+            [HumanUse("insect repellent")]
+            InsectRepellent,
+            [HumanUse("medicine")]
+            Medicine,
+            [HumanUse("oil")]
+            OilWaxResinPolish,
+            [HumanUse("ornamental")]
+            Ornamental,
+            [HumanUse("pollard")]
+            Pollard,
+            [HumanUse("soap")]
+            Soap,
+            [HumanUse("wood")]
+            Wood,
         }
     }
 }

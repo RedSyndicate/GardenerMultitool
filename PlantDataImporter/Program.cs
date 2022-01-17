@@ -35,10 +35,6 @@ namespace PlantDataImporter
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
 
             var csvFolder = Path.Combine(directory, args[0]);
-            var jsonFolder = Path.Combine(directory, args[1]);
-
-            var csvExists = Directory.Exists(csvFolder);
-            var jsonExists = Directory.Exists(csvFolder);
             var files = Directory.GetFiles(csvFolder);
 
             //make records list
@@ -58,16 +54,25 @@ namespace PlantDataImporter
         }
 
         private static MapperConfiguration Config => new(cfg =>
-            cfg.CreateMap<PlantDto, Plant>()
-                .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
-                    src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).topH()))
-                .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
-                    src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                        .Select(cleanfunction)
-                        .Aggregate(new HashSet<IEcologicalFunction>(), AggregateEcologicalFunctions)))
-                .ForMember(dest => dest.HumanUse, opt => opt.UseDestinationValue()));
+                cfg.CreateMap<PlantDto, Plant>()
+                    .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
+                        src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).topH()))
+                    .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
+                        src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .Select(Clean)
+                            .Aggregate(new HashSet<IEcologicalFunction>(), AggregateEcologicalFunctions)))
+                    .ForMember(dest => dest.HumanUse, opt => opt.MapFrom(src =>
+                        src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .Where(FilterBullshit)
+                            .Select(Clean)
+                            .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses))
+                )
+            );
 
-        private static string cleanfunction(string arg1) => arg1;
+        private static readonly List<string> _nonoWords = new() { "wax", "resin", "or polish", "resin or polish", "spray" };
+        private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());  
+
+        private static string Clean(string arg1) => arg1;
 
         private static HashSet<IEcologicalFunction> AggregateEcologicalFunctions(HashSet<IEcologicalFunction> accumulator, string function)
         {
@@ -75,7 +80,7 @@ namespace PlantDataImporter
             return accumulator;
         }
 
-        private static List<IHumanUse> AggregateHumanUses(List<IHumanUse> accumulator, string humanUse)
+        private static HashSet<IHumanUse> AggregateHumanUses(HashSet<IHumanUse> accumulator, string humanUse)
         {
             accumulator.Add(HumanUses.Create(humanUse));
             return accumulator;

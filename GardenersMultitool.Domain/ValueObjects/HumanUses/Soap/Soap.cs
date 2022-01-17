@@ -1,20 +1,17 @@
-﻿
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Soap
 {
-    public class Soap : ValueObject, ISoap
+    public class Soap : ValueObject, ISoap, IHumanUseFactory
     {
         public string Label => "Soap";
 
         public static ISoap Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Soap" => new Soap(),
+                "soap" => new Soap(),
                 _ => throw new ArgumentException()
             };
 

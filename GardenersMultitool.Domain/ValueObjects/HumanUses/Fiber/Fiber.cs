@@ -5,14 +5,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Fiber
 {
-    public class Fiber : ValueObject, IFiber
+    public class Fiber : ValueObject, IFiber, IHumanUseFactory
     {
         public string Label => "Fiber";
 
         public static IFiber Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Fiber" => new Fiber(),
+                "fiber" => new Fiber(),
                 _ => throw new ArgumentException()
             };
 

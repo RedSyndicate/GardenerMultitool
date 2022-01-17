@@ -5,14 +5,14 @@ using GardenersMultitool.Domain.ValueObjects.HumanUses.CutFlower;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.DriedFlower
 {
-    public class DriedFlower : ValueObject, IDriedFlower
+    public class DriedFlower : ValueObject, IDriedFlower, IHumanUseFactory
     {
         public string Label => "Dried Flower";
 
         public static IDriedFlower Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Dried Flower" => new DriedFlower(),
+                "dried flower" => new DriedFlower(),
                 _ => throw new ArgumentException()
             };
 

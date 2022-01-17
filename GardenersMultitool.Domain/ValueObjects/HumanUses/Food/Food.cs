@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Food
 {
-    public class Food : ValueObject, IFood
+    public class Food : ValueObject, IFood, IHumanUseFactory
     {
         public string Label => "Food";
 
         public static IFood Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Food" => new Food(),
+                "food" => new Food(),
                 _ => throw new ArgumentException()
             };
 

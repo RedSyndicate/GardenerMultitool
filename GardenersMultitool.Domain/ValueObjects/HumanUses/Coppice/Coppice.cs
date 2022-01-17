@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.Coppice
 {
-    public class ContainerGarden : ValueObject, ICoppice
+    public class Coppice : ValueObject, ICoppice, IHumanUseFactory
     {
         public string Label => "Coppice";
 
         public static ICoppice Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Coppice" => new ContainerGarden(),
+                "coppice" => new Coppice(),
                 _ => throw new ArgumentException()
             };
 
