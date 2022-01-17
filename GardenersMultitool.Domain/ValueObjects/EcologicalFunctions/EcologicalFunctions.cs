@@ -15,7 +15,7 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions
                 Enum.Parse<EcologicalFunction>(type.Name);
 
             Func<string, IEcologicalFunction> ElementSelector(Type factoryType)
-                => function => factoryType.GetMethod("Create").Invoke(null, new object?[]{function}) as IEcologicalFunction;
+                => function => factoryType.GetMethod("Create").Invoke(null, new object[]{function}) as IEcologicalFunction;
 
             try
             {

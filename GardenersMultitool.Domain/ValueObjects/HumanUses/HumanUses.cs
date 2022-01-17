@@ -15,7 +15,7 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
                 Enum.Parse<HumanUse>(type.Name);
 
             Func<string, IHumanUse> ElementSelector(Type factoryType)
-                => function => factoryType.GetMethod("Create").Invoke(null, new object?[]{function}) as IHumanUse;
+                => function => factoryType.GetMethod("Create").Invoke(null, new object[]{function}) as IHumanUse;
 
             try
             {
