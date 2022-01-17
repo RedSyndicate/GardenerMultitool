@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+
 // ReSharper disable InconsistentNaming
 
-namespace GardenersMultitool.Domain.ValueObjects
+namespace GardenersMultitool.Domain.ValueObjects.Common
 {
     public class pH : ValueObject
     {

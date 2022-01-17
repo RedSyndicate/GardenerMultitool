@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using GardenersMultitool.Domain.ValueObjects.Common;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
+using GardenersMultitool.Domain.ValueObjects.PlantType;
 
 namespace GardenersMultitool.Domain.ValueObjects
 {
     public class Plant
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string ScientificName { get; set; }
+        public Name Name { get; set; }
+        public Name ScientificName { get; set; }
         public string Binomial { get; set; }
-        public string PlantType { get; set; }
+        public IPlantType PlantType { get; set; }
         public string Height { get; set; }
         public string Spread { get; set; }
         public string RootDepth { get; set; }
@@ -34,3 +36,4 @@ namespace GardenersMultitool.Domain.ValueObjects
         public List<IHumanUse> HumanUse { get; set; }
     }
 }
+
