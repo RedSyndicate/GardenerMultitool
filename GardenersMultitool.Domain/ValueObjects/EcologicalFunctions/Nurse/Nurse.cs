@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Nurse
 {
-    public class Nurse : ValueObject, INurse
+    public class Nurse : ValueObject, INurse, IEcologicalFunctionFactory
     {
         public string Label => "Ground Cover";
 

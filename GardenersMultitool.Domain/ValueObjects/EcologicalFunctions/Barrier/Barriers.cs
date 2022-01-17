@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Barrier
 {
-    public static class Barriers
+    public class Barriers : IEcologicalFunctionFactory
     {
         public static IBarrier Create(string barrierStr) =>
             barrierStr.ToLowerInvariant() switch
             {
                 "chemical barrier" => new ChemicalBarrier(),
                 "hedge" => new Hedge(),
-                "wind break" => new WindBreak(),
+                "windbreak" => new WindBreak(),
                 _ => throw new ArgumentException()
             };
     }

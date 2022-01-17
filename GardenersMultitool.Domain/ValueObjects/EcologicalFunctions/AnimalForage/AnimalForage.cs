@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.AnimalForage
 {
-    public class AnimalForage : ValueObject, IAnimalForage
+    public class AnimalForage : ValueObject, IAnimalForage, IEcologicalFunctionFactory
     {
         public string Label => "Animal Forage";
 
@@ -12,7 +12,7 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.AnimalForag
             animalForage.ToLowerInvariant() switch 
             {
                 "domestic animal forage" => new AnimalForage(),
-                _ => throw new ArgumentException()
+                _ => throw new ArgumentException(animalForage)
             };
 
         protected override IEnumerable<object> GetEqualityComponents()

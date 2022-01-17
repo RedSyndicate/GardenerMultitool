@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.PestManagement
 {
-    public class PestManagements
+    public class PestManagements : IEcologicalFunctionFactory
     {
         public static IPestManagement Create(string pestManagement) => 
             pestManagement.ToLowerInvariant() switch 

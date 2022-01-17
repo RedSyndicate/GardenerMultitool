@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.GroundCover
 {
-    public class GroundCover : ValueObject, IGroundCover
+    public class GroundCover : ValueObject, IGroundCover, IEcologicalFunctionFactory
     {
         public string Label => "Ground Cover";
 
         public static IGroundCover Create(string groundCover) =>
             groundCover.ToLowerInvariant() switch
             {
-                "ground cover" => new GroundCover(),
+                "groundcover" => new GroundCover(),
                 _ => throw new ArgumentException()
             };
 

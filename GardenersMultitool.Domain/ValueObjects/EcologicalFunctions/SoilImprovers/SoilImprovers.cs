@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.SoilImprovers
 {
-    public class SoilImprovers
+    public class SoilImprovers : IEcologicalFunctionFactory
     {
         public static ISoilImprover Create(string soilImprover) => 
             soilImprover.ToLowerInvariant() switch 
@@ -14,8 +14,18 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.SoilImprove
                 "nitrogen fixer" => new NitrogenFixer(),
                 "nitrogen scavenger" => new NitrogenScavenger(),
                 "soil builder" => new SoilBuilder(),
+                "soil cultivator" => new SoilCultivator(),
                 _ => throw new ArgumentException()
             };
+    }
+
+    public class SoilCultivator : ValueObject, ISoilImprover
+    {
+        public string Label => "Soil Cultivator";
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Label;
+        }
     }
 
     public class DynamicAccumulator : ValueObject, ISoilImprover

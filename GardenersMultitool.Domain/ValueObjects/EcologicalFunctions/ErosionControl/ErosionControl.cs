@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ErosionControl
 {
-    public class ErosionControl : ValueObject, IErosionControl
+    public class ErosionControl : ValueObject, IErosionControl, IEcologicalFunctionFactory
     {
         public string Label => "Erosion Control";
 

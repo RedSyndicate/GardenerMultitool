@@ -6,14 +6,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.InsecticideSpray
 {
-    public class InsecticideSpray : ValueObject, IInsecticideSpray
+    public class InsecticideSpray : ValueObject, IInsecticideSpray, IHumanUseFactory
     {
         public string Label => "Insecticide, Spray";
 
         public static IInsecticideSpray Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Insecticide, Spray" => new InsecticideSpray(),
+                "insecticide" => new InsecticideSpray(),
                 _ => throw new ArgumentException()
             };
 

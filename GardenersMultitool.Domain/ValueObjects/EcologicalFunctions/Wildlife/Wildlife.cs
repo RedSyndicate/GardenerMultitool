@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Wildlife
 {
-    public class Wildlife
+    public class Wildlife : IEcologicalFunctionFactory
     {
         public static IWildlife Create(string wildlife) => 
             wildlife.ToLowerInvariant() switch 

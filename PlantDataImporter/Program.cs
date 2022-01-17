@@ -9,6 +9,7 @@ using System.Linq;
 using AutoMapper;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
+using GardenersMultitool.Domain.ValueObjects.HumanUses.Biomass;
 using PlantDataImporter.Extensions;
 
 namespace PlantDataImporter
@@ -34,10 +35,6 @@ namespace PlantDataImporter
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
 
             var csvFolder = Path.Combine(directory, args[0]);
-            var jsonFolder = Path.Combine(directory, args[1]);
-
-            var csvExists = Directory.Exists(csvFolder);
-            var jsonExists = Directory.Exists(csvFolder);
             var files = Directory.GetFiles(csvFolder);
 
             //make records list
@@ -53,46 +50,40 @@ namespace PlantDataImporter
                 plants.AddRange(records.Select(mapper.Map<Plant>));
             }
 
-            var json = JsonConvert.SerializeObject(plants);
-            var allPlants = JsonConvert.DeserializeObject<List<Plant>>(json);
-
-
-            File.WriteAllText(Path.Combine(jsonFolder, "plants.json"), json);
-
-
-            Console.WriteLine(allPlants[0].ToString());
-            Console.WriteLine(allPlants[1].ToString());
-            Console.WriteLine(allPlants[2].ToString());
-
             Console.ReadLine();
-
-
-
-            //Next Step: For each different value of a property (like PlantType), list out each one once, and log it to console, so I can get a list of all enums to add to .cs files
-
         }
 
-        private static MapperConfiguration Config => new(cfg => 
-            cfg.CreateMap<PlantDto, Plant>()
-                .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src => 
-                    src.SoilPH.Split('-', StringSplitOptions.TrimEntries).topH()))
-                .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src => 
-                    src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries)
-                    .Aggregate(new List<IEcologicalFunction>(), AggregateEcologicalFunctions)))
-                .ForMember(dest => dest.HumanUse, opt => opt.MapFrom(src =>
-                    src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries)
-                    .Aggregate(new List<IHumanUse>(), AggregateHumanUses))));
+        private static MapperConfiguration Config => new(cfg =>
+                cfg.CreateMap<PlantDto, Plant>()
+                    .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
+                        src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).topH()))
+                    .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
+                        src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .Select(Clean)
+                            .Aggregate(new HashSet<IEcologicalFunction>(), AggregateEcologicalFunctions)))
+                    .ForMember(dest => dest.HumanUse, opt => opt.MapFrom(src =>
+                        src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .Where(FilterBullshit)
+                            .Select(Clean)
+                            .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses))
+                )
+            );
 
-        private static List<IEcologicalFunction> AggregateEcologicalFunctions(List<IEcologicalFunction> list, string function)
+        private static readonly List<string> _nonoWords = new() { "wax", "resin", "or polish", "resin or polish", "spray" };
+        private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());  
+
+        private static string Clean(string arg1) => arg1;
+
+        private static HashSet<IEcologicalFunction> AggregateEcologicalFunctions(HashSet<IEcologicalFunction> accumulator, string function)
         {
-            list.Add(EcologicalFunctions.Create(function));
-            return list;
+            accumulator.Add(EcologicalFunctions.Create(function));
+            return accumulator;
         }
 
-        private static List<IHumanUse> AggregateHumanUses(List<IHumanUse> list, string humanUse)
+        private static HashSet<IHumanUse> AggregateHumanUses(HashSet<IHumanUse> accumulator, string humanUse)
         {
-            list.Add(HumanUses.Create(humanUse));
-            return list;
+            accumulator.Add(HumanUses.Create(humanUse));
+            return accumulator;
         }
     }
 }

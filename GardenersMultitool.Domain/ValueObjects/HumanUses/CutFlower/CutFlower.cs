@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.CutFlower
 {
-    public class CutFlower : ValueObject, ICutFlower
+    public class CutFlower : ValueObject, ICutFlower, IHumanUseFactory
     {
         public string Label => "Cut Flower";
 
         public static ICutFlower Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Cut Flower" => new CutFlower(),
+                "cut flower" => new CutFlower(),
                 _ => throw new ArgumentException()
             };
 

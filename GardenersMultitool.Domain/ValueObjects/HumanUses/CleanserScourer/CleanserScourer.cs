@@ -4,14 +4,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.CleanserScourer
 {
-    public class CleanserScourer : ValueObject, ICleanserScourer
+    public class CleanserScourer : ValueObject, ICleanserScourer, IHumanUseFactory
     {
         public string Label => "Cleanser/Scourer";
 
         public static ICleanserScourer Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Cleanser/Scourer" => new CleanserScourer(),
+                "cleanser/scourer" => new CleanserScourer(),
                 _ => throw new ArgumentException()
             };
 

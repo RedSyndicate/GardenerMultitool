@@ -6,14 +6,14 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.HumanUses.OilWaxResinPolish
 {
-    public class OilWaxResinPolish : ValueObject, IOilWaxResinPolish
+    public class OilWaxResinPolish : ValueObject, IOilWaxResinPolish, IHumanUseFactory
     {
         public string Label => "Oil, Wax, Resin, or Polish";
 
         public static IOilWaxResinPolish Create(string erosionControl) => 
             erosionControl.ToLowerInvariant() switch 
             {
-                "Oil, Wax, Resin, or Polish" => new OilWaxResinPolish(),
+                "oil" => new OilWaxResinPolish(),
                 _ => throw new ArgumentException()
             };
 
