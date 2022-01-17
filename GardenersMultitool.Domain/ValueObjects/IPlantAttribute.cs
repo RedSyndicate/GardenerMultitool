@@ -4,4 +4,10 @@
     {
         public string Label { get; }
     }
+    public interface IEcologicalFunctionFactory
+    {
+    }
+    public interface IHumanUseFactory
+    {
+    }
 }

@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ChemicalDeterrents
 {
-    public static class ChemicalDeterrents
+    public class ChemicalDeterrents : IEcologicalFunctionFactory
     {
         public static IChemicalDeterrent Create(string chemicalDeterrent) =>
             chemicalDeterrent.ToLowerInvariant() switch

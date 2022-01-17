@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Restorers
 {
-    public class Restorers
+    public class Restorers : IEcologicalFunctionFactory
     {
         public static IRestorer Create(string restorer) => 
             restorer.ToLowerInvariant() switch 
