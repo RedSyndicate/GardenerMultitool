@@ -1,6 +1,5 @@
 ﻿using CsvHelper;
 using GardenersMultitool.Domain.ValueObjects;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +8,6 @@ using System.Linq;
 using AutoMapper;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
-using GardenersMultitool.Domain.ValueObjects.HumanUses.Biomass;
 using PlantDataImporter.Extensions;
 
 namespace PlantDataImporter
