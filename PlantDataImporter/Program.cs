@@ -14,23 +14,42 @@ namespace PlantDataImporter
 {
     class Program
     {
-        private static readonly MapperConfiguration _config;
-
-        static Program()
-        {
-            _config = Config;
-        }
-
         static void Main(string[] args)
         {
             if (args.Length < 1)
                 return;
 
-            var mapper = _config.CreateMapper();
-
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
+            new Loader().Run(args[0], directory);
 
-            var csvFolder = Path.Combine(directory, args[0]);
+            Console.ReadLine();
+        }
+    }
+    public class Loader
+    {
+        private static MapperConfiguration Config => new(cfg =>
+            cfg.CreateMap<PlantDto, Plant>()
+                .ForMember(dest => dest.PlantType, opt => opt.MapFrom(src =>
+                    src.PlantType.ToLowerInvariant().ToPlantType()))
+                .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
+                    src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).TopH()))
+                .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
+                    src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Select(Clean)
+                        .Aggregate(new HashSet<IEcologicalFunction>(), AggregateEcologicalFunctions)))
+                .ForMember(dest => dest.HumanUse, opt => opt.MapFrom(src =>
+                    src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Where(FilterBullshit)
+                        .Select(Clean)
+                        .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses))
+            )
+        );
+
+        public IEnumerable<Plant> Run(string path, string directory)
+        {
+            var mapper = Config.CreateMapper();
+
+            var csvFolder = Path.Combine(directory, path);
             var files = Directory.GetFiles(csvFolder);
 
             //make records list
@@ -45,27 +64,9 @@ namespace PlantDataImporter
                 plants.AddRange(records.Select(mapper.Map<Plant>));
             }
 
-            Console.ReadLine();
+            return plants;
         }
-
-        private static MapperConfiguration Config => new(cfg =>
-                cfg.CreateMap<PlantDto, Plant>()
-                    .ForMember(dest => dest.PlantType, opt => opt.MapFrom(src =>
-                        src.PlantType.ToLowerInvariant().ToPlantType()))
-                    .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
-                        src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).TopH()))
-                    .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
-                        src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                            .Select(Clean)
-                            .Aggregate(new HashSet<IEcologicalFunction>(), AggregateEcologicalFunctions)))
-                    .ForMember(dest => dest.HumanUse, opt => opt.MapFrom(src =>
-                        src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                            .Where(FilterBullshit)
-                            .Select(Clean)
-                            .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses))
-                )
-            );
-
+        
         private static readonly List<string> _nonoWords = new() { "wax", "resin", "or polish", "resin or polish", "spray" };
         private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());  
 
