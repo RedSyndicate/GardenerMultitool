@@ -32,8 +32,8 @@ namespace GardenersMultitool.Domain.ValueObjects
         public string HardinessZone { get; set; }
         public string SoilMoisture { get; set; }
         public Maybe<pH> SoilPH { get; set; }
-        public List<IEcologicalFunction> EcologicalFunction { get; set; }
-        public List<IHumanUse> HumanUse { get; set; }
+        public List<IPlantAttribute> EcologicalFunction { get; set; }
+        public List<IPlantAttribute> HumanUse { get; set; }
     }
 }
 

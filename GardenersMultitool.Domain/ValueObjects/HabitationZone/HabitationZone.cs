@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 
 namespace GardenersMultitool.Domain.ValueObjects
 {
-    class HabitationZone : ValueObject
+    public class HabitationZone : ValueObject
     {
         public int Zone { get; }
 
