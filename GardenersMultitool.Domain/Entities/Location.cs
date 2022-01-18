@@ -32,7 +32,7 @@ namespace GardenersMultitool.Domain.Entities
         {
             //validation
             if (value == null)
-                return Result.Failure<Plant>();
+                return Result.Failure<Plant>("Cannot add null to location.");
             Plants.Add(value);
             return value;
         }

@@ -62,7 +62,7 @@ namespace GardenersMultitool.Api.Controllers
         }
 
         private ActionResult<Location> OnSuccess(Location location) => Ok(location);
-        private ActionResult<Location> OnFailure(string errors) => Ok(errors);
+        private ActionResult<Location> OnFailure(string errors) => BadRequest(errors);
 
         [HttpPut("add_plant")]
         public Location AddPlant(int plantId, Guid locationId)
