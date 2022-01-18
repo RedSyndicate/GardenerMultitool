@@ -20,5 +20,7 @@ namespace GardenersMultitool.Domain.ValueObjects.Common
             yield return MinimumpH;
             yield return MaximumpH;
         }
+
+        public override string ToString() => $"{MinimumpH} - {MaximumpH}";
     }
 }
