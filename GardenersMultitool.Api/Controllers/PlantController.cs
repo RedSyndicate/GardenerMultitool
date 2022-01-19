@@ -47,7 +47,7 @@ namespace GardenersMultitool.Api.Controllers
                 .Where(plant => plant.PlantType is Aquatic);
         }
 
-        [HttpGet("Biennial")]
+        [HttpGet("biennial")]
         public IEnumerable<Plant> GetBiennial()
         {
             return _ourPlants.Values
@@ -70,6 +70,65 @@ namespace GardenersMultitool.Api.Controllers
                 .Where(plant => plant.SoilPH != Maybe<pH>.None)
                 .Where(plant => plant.PlantType is DeciduousTree);
         }
+
+        [HttpGet("evergreen_shrub")]
+        public IEnumerable<Plant> GetEvergreenShrub()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is EvergreenShrub);
+        }
+
+        [HttpGet("evergreen_tree")]
+        public IEnumerable<Plant> GetEvergreenTree()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is EvergreenTree);
+        }
+
+        [HttpGet("fern")]
+        public IEnumerable<Plant> GetFern()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is Fern);
+        }
+
+        [HttpGet("grass")]
+        public IEnumerable<Plant> GetGrass()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is Grass);
+        }
+
+        [HttpGet("mosses")]
+        public IEnumerable<Plant> GetMosses()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is Mosses);
+        }
+
+        [HttpGet("perennial")]
+        public IEnumerable<Plant> GetPerennial()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is Perennial);
+        }
+
+        [HttpGet("vine")]
+        public IEnumerable<Plant> GetVine()
+        {
+            return _ourPlants.Values
+                .Where(plant => plant.SoilPH != Maybe<pH>.None)
+                .Where(plant => plant.PlantType is Vine);
+        }
+
+
+
     }
 }
 
