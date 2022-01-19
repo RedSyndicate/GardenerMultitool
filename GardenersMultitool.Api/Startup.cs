@@ -41,6 +41,10 @@ namespace GardenersMultitool.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
+                app.UseCors(options =>
+                {
+                    options.AllowAnyOrigin();
+                });
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GardenersMultitool.Api v1"));
             }
 

@@ -4,12 +4,6 @@
 </script>
 
 <Navigation>
-	<slot id="main">
-		<style>
-			@tailwind base;
-			@tailwind components;
-			@tailwind utilities;
-		</style>
-	</slot></Navigation
->
+	<slot id="main" />
+</Navigation>
 <slot />
