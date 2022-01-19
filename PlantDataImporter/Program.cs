@@ -41,8 +41,9 @@ namespace PlantDataImporter
                     src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Where(FilterBullshit)
                         .Select(Clean)
-                        .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses))
-            )
+                        .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses)))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
+                    src.Name.ToLowerInvariant().ToName()))
         );
 
         public IEnumerable<Plant> Run(string path, string directory)

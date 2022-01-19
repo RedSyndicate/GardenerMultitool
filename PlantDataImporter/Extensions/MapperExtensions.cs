@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CSharpFunctionalExtensions;
+using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects.Common;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
 
@@ -14,5 +15,8 @@ namespace PlantDataImporter.Extensions
 
         public static IPlantType ToPlantType(this string plantType) =>
             PlantTypes.Create(plantType);
+
+        public static IName ToName(this string name) =>
+            Name.Create(name);
     }
 }
