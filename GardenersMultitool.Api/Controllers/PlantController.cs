@@ -94,7 +94,7 @@ namespace GardenersMultitool.Api.Controllers
                 .Where(plant => plant.SoilPH != Maybe<pH>.None)
                 .Where(plant => plant.PlantType is Fern);
         }
-
+            
         [HttpGet("grass")]
         public IEnumerable<Plant> GetGrass()
         {
@@ -120,15 +120,11 @@ namespace GardenersMultitool.Api.Controllers
         }
 
         [HttpGet("vine")]
-        public IEnumerable<Plant> GetVine()
+        public IEnumerable<Plant> GetVines()
         {
             return _ourPlants.Values
                 .Where(plant => plant.SoilPH != Maybe<pH>.None)
                 .Where(plant => plant.PlantType is Vine);
         }
-
-
-
     }
 }
-
