@@ -1,14 +1,16 @@
+import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
+import { Client } from '$lib/client';
 
-export const plants = writable([]);
+export const annuals = writable([]);
 
-const fetchPlants = async () => {
-	const url = 'https://localhost:44363/Plant/annuals';
-	await fetch(url).then(async (res) => {
-		const data = await res.json();
-		console.log(data[0]);
-		plants.set(data);
-	});
+const dev = 'https://localhost:44363';
+const prod = 'https://gardenermultitool.westus2.azurecontainer.io/Plant/annuals';
+
+const fetchAnnuals = async () => {
+	var _apiClient = new Client(dev);
+
+	annuals.set(await _apiClient.plantAnnuals());
 };
 
-fetchPlants();
+fetchAnnuals();
