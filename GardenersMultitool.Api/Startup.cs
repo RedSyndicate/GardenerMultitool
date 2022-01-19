@@ -14,10 +14,12 @@ namespace GardenersMultitool.Api
 {
     public class Startup
     {
+        private readonly string _contentRoot;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _contentRoot = configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
         }
 
         public IConfiguration Configuration { get; }
@@ -29,6 +31,7 @@ namespace GardenersMultitool.Api
             services.AddSingleton<PlantService>();
 
             services
+                .AddPlantCache(_contentRoot)
                 .AddLocationCache()
                 .AddSwaggerGen(c =>
                 {
@@ -44,14 +47,14 @@ namespace GardenersMultitool.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
                 app.UseCors(options =>
                 {
                     options.AllowAnyOrigin();
                 });
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GardenersMultitool.Api v1"));
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GardenersMultitool.Api v1"));
             app.UseHttpsRedirection();
 
             app.UseRouting();

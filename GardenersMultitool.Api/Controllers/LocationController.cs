@@ -15,11 +15,11 @@ namespace GardenersMultitool.Api.Controllers
     [Route("[controller]")]
     public class LocationController : ControllerBase
     {
-        private readonly Logger<LocationController> _logger;
+        private readonly ILogger<LocationController> _logger;
         private readonly ConcurrentDictionary<Guid, Location> _locations;
         private readonly IDictionary<int, Plant> _ourPlants;
 
-        public LocationController(Logger<LocationController> logger, ConcurrentDictionary<Guid, Location> locations, Dictionary<int, Plant> ourPlants)
+        public LocationController(ILogger<LocationController> logger, ConcurrentDictionary<Guid, Location> locations, Dictionary<int, Plant> ourPlants)
         {
             _logger = logger;
             _locations = locations;
