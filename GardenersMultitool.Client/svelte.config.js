@@ -1,6 +1,10 @@
 import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
+const mode = process.env.NODE_ENV;
+const dev = mode === "development";
+if (dev)
+	process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
