@@ -7,9 +7,9 @@ namespace PlantDataImporter.Extensions
 {
     public static class MapperExtensions
     {
-        public static Maybe<pH> TopH(this string[] soilpHTokens) => 
-            soilpHTokens.Count() < 2 
-                ? Maybe.None
+        public static pH TopH(this string[] soilpHTokens) =>
+            soilpHTokens.Count() < 2
+                ? default(pH)
                 : new pH(decimal.Parse(soilpHTokens.ElementAt(0)), decimal.Parse(soilpHTokens.ElementAt(1)));
 
         public static IPlantType ToPlantType(this string plantType) =>

@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using CsvHelper.Configuration.Attributes;
 using GardenersMultitool.Domain.ValueObjects.Common;
-using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
-using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
+using MongoDB.Bson;
 
 namespace GardenersMultitool.Domain.ValueObjects
 {
     public class Plant
     {
-        public int Id { get; set; }
+        [Ignore]
+        public ObjectId Id { get; set; }
+        public int PlantId { get; set; }
         public Name Name { get; set; }
         public Name ScientificName { get; set; }
         public string Binomial { get; set; }
@@ -28,10 +30,10 @@ namespace GardenersMultitool.Domain.ValueObjects
         public string GrowthRate { get; set; }
         public string InsectPredation { get; set; }
         public string Disease { get; set; }
-        public string LightRequired{ get; set; }
+        public string LightRequired { get; set; }
         public string HardinessZone { get; set; }
         public string SoilMoisture { get; set; }
-        public Maybe<pH> SoilPH { get; set; }
+        public pH SoilPH { get; set; }
         public List<IPlantAttribute> EcologicalFunction { get; set; }
         public List<IPlantAttribute> HumanUse { get; set; }
     }

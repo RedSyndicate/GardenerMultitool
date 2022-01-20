@@ -17,17 +17,23 @@ namespace GardenersMultitool.Api.Controllers
     {
         private readonly ILogger<PlantController> _logger;
         private readonly IDictionary<int, Plant> _ourPlants;
-
-        public PlantController(ILogger<PlantController> logger, Dictionary<int, Plant> ourPlants)
+        private readonly PlantService _plantService;
+        public PlantController(ILogger<PlantController> logger, Dictionary<int, Plant> ourPlants, PlantService dataService)
         {
             _logger = logger;
+
             _ourPlants = ourPlants;
+
+            _plantService = dataService;
         }
 
         [HttpGet]
-        public Plant GetById(int id)
+        public async Task<Plant> GetById(int id)
         {
+            var plants = await _plantService.GetAsync();
+
             _ourPlants.TryGetValue(id, out var plant);
+
             return plant;
         }
 
