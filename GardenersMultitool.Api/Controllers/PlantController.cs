@@ -27,7 +27,7 @@ namespace GardenersMultitool.Api.Controllers
         [HttpGet]
         public async Task<Plant> GetById(int id)
         {
-            return (await _plantService.GetAsync()).FirstOrDefault(p => p.PlantId == id);
+            return (await _plantService.GetAsync(id));
         }
 
         [HttpGet("annuals")]
