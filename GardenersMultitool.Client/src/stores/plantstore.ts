@@ -1,6 +1,6 @@
-import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
 import { Client } from '$lib/client';
+import settings from '../settings.json';
 
 export const annuals = writable([]);
 
