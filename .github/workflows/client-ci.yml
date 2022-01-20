@@ -12,6 +12,9 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: ./GardenerMultitool.Client/
     name: Build Client
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +22,6 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '16.x'
-    - run: cd GardenerMultitool.Client/
     - run: npm install -g yarn
     - run: yarn && yarn build
     - run: yarn test
