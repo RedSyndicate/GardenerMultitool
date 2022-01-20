@@ -9,6 +9,7 @@ using AutoMapper;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using PlantDataImporter.Extensions;
+using System.Text;
 
 namespace PlantDataImporter
 {
@@ -20,9 +21,39 @@ namespace PlantDataImporter
                 return;
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-            new Loader().Run(args[0], directory);
+            var plants = new Loader().Run(args[0], directory);
+
+            PlantPropertyCSVParser(plants);
+
+        }
+
+        private static void PlantPropertyCSVParser(IEnumerable<Plant> plants)
+        {
+            //This method returns to the console a list of all uniques values of a
+            //given label on the CSV files. See var attribute of FlatString() below.
+            var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
+            string[] plantPropertiesSBArray = plantPropertySB.ToString().Split("\r\n");
+            List<string> propertyList = new List<string>();
+
+            foreach (string property in plantPropertiesSBArray)
+                if (propertyList.Contains(property))
+                    continue;
+                else
+                    propertyList.Add(property);
+
+            foreach (var item in propertyList)
+                Console.WriteLine(item);
 
             Console.ReadLine();
+        }
+
+        static StringBuilder FlatString(StringBuilder sb, Plant plant)
+        {
+            var attribute = plant.EcologicalFunction;
+            //if (attribute == null)
+            //    return sb;
+            //return sb.AppendLine(attribute);
+            return sb.AppendLine(attribute); // doesn't compile for Lists.
         }
     }
     public class Loader
@@ -42,8 +73,6 @@ namespace PlantDataImporter
                         .Where(FilterBullshit)
                         .Select(Clean)
                         .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses)))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
-                    src.Name.ToLowerInvariant().ToName()))
         );
 
         public IEnumerable<Plant> Run(string path, string directory)

@@ -2,7 +2,7 @@
   "profiles": {
     "PlantDataImporter": {
       "commandName": "Project",
-      "commandLineArgs": "\"Permaculture_Plant_CSVs\""
+      "commandLineArgs": "\"CSV\""
     }
   }
 }

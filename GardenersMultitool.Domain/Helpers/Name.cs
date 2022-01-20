@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
-using GardenersMultitool.Domain.Helpers;
 
 namespace GardenersMultitool.Domain.ValueObjects.Common
 {
-    public class Name : ValueObject, IName
+    public class Name : ValueObject
     {
         public string Value { get; private set; }
 
@@ -25,11 +24,6 @@ namespace GardenersMultitool.Domain.ValueObjects.Common
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
-        }
-
-        public static IName Create(string name)
-        {
-             return new Name(name);
         }
     }
 }
