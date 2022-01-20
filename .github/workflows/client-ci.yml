@@ -14,7 +14,7 @@ jobs:
   build:
     defaults:
       run:
-        working-directory: ./GardenerMultitool.Client/
+        working-directory: GardenerMultitool.Client/
     name: Build Client
     runs-on: ubuntu-latest
     steps:
