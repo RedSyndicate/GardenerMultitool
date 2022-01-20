@@ -5,6 +5,7 @@ namespace PlantDataImporter
     public class PlantDto
     {
         //Properties modelled after .csv
+        [Name("Id")]
         public int PlantId { get; set; }
         public string Name { get; set; }
         [Name("Scientific name")]

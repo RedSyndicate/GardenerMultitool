@@ -17,10 +17,11 @@ namespace GardenersMultitool.Api.Controllers
     {
         private readonly ILogger<PlantController> _logger;
         private readonly PlantService _plantService;
+        private readonly IDictionary<int, Plant> _plantCache;
+
         public PlantController(ILogger<PlantController> logger, PlantService dataService)
         {
             _logger = logger;
-
             _plantService = dataService;
         }
 

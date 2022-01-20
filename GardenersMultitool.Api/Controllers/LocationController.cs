@@ -3,9 +3,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using GardenersMultitool.Api.UseCases;
+using GardenersMultitool.Api.UseCases.Locations;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -16,70 +21,64 @@ namespace GardenersMultitool.Api.Controllers
     public class LocationController : ControllerBase
     {
         private readonly ILogger<LocationController> _logger;
+        private readonly IMediator _mediator;
+        private readonly PlantService _plantService;
         private readonly ConcurrentDictionary<Guid, Location> _locations;
         private readonly IDictionary<int, Plant> _ourPlants;
 
-        public LocationController(ILogger<LocationController> logger, ConcurrentDictionary<Guid, Location> locations, Dictionary<int, Plant> ourPlants)
+        public LocationController(ILogger<LocationController> logger, IMediator mediator)
         {
             _logger = logger;
-            _locations = locations;
-            _ourPlants = ourPlants;
+            _mediator = mediator;
         }
 
         [HttpGet("by_id")]
-        public Location GetLocation(Guid id)
-        {
-            _locations.TryGetValue(id, out var location);
-            return location;
-        }
+        public async Task<Location> GetLocation(Guid id) => await _mediator.Send(new GetLocationById(id));
 
         [HttpGet]
-        public IEnumerable<Location> GetLocation() => _locations.Values;
+        public async Task<IEnumerable<Location>> GetLocation() => await _mediator.Send(new GetAllLocations());
 
 
         [HttpPost]
-        public Guid CreateLocation()
-        {
-            var location = Location.Create();
-            _locations.TryAdd(location.Id, location);
-            return location.Id;
-        }
+        public async Task<Guid> CreateLocation() => 
+            await _mediator.Send(new CreateNewLocation(), CancellationToken.None);
 
-        [HttpPut("add_plants")]
-        public ActionResult<Location> AddPlants(List<int> plantIds, Guid locationId)
-        {
-            if (!_locations.TryGetValue(locationId, out var location)) return location;
-            var results = new List<Result<Plant>>();
-            plantIds.ForEach(id =>
-            {
-                if (!_ourPlants.TryGetValue(id, out var plant)) return;
-                results.Add(location.AddPlant(plant));
-            });
-            var result = results.Combine(" --- ");
-            if (result.IsFailure) return BadRequest(result.Error);
-            result.Match(_ => OnSuccess(location), OnFailure);
-            return location;
-        }
+        //[HttpPut("add_plants")]
+        //public ActionResult<Location> AddPlants(List<int> plantIds, Guid locationId)
+        //{
+        //    if (!_locations.TryGetValue(locationId, out var location)) return location;
+        //    var results = new List<Result<Plant>>();
+        //    plantIds.ForEach(id =>
+        //    {
+        //        if (!_ourPlants.TryGetValue(id, out var plant)) return;
+        //        results.Add(location.AddPlant(plant));
+        //    });
+        //    var result = results.Combine(" --- ");
+        //    if (result.IsFailure) return BadRequest(result.Error);
+        //    result.Match(_ => OnSuccess(location), OnFailure);
+        //    return location;
+        //}
 
-        private ActionResult<Location> OnSuccess(Location location) => Ok(location);
-        private ActionResult<Location> OnFailure(string errors) => BadRequest(errors);
+        //private ActionResult<Location> OnSuccess(Location location) => Ok(location);
+        //private ActionResult<Location> OnFailure(string errors) => BadRequest(errors);
 
-        [HttpPut("add_plant")]
-        public Location AddPlant(int plantId, Guid locationId)
-        {
-            if (!_locations.TryGetValue(locationId, out var location)) return location;
-            if (!_ourPlants.TryGetValue(plantId, out var plant)) return location;
+        //[HttpPut("add_plant")]
+        //public Location AddPlant(int plantId, Guid locationId)
+        //{
+        //    if (!_locations.TryGetValue(locationId, out var location)) return location;
+        //    if (!_ourPlants.TryGetValue(plantId, out var plant)) return location;
 
-            location.AddPlant(plant);
-            return location;
-        }
+        //    location.AddPlant(plant);
+        //    return location;
+        //}
 
-        [HttpGet("ecological_functions")]
-        public IEnumerable<IPlantAttribute> EcologicalFunctions(Guid locationId)
-        {
-            _locations.TryGetValue(locationId, out var location);
-            return location?.EcologicalFunctions.Distinct();
-        }
+        //[HttpGet("ecological_functions")]
+        //public IEnumerable<IPlantAttribute> EcologicalFunctions(Guid locationId)
+        //{
+        //    _locations.TryGetValue(locationId, out var location);
+        //    return location?.EcologicalFunctions.Distinct();
+        //}
     }
+
 }
 

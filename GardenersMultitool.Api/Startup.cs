@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Concurrent;
+using System.Reflection;
 using GardenersMultitool.Api.CustomConfigurations;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,12 +29,10 @@ namespace GardenersMultitool.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"));
-            services.AddSingleton<PlantService>();
-
-            services
-                .AddPlantCache(_contentRoot)
-                .AddLocationCache()
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly)
+            .Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"))
+            .AddSingleton<PlantService>()
+                //.AddPlantCache(_contentRoot) // Load files from api project directory
                 .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
