@@ -7,9 +7,12 @@ name: client-CI
 on:
   push:
     branches: [main]
+    paths:
+      - 'GardenersMultitool.Client/**'
   pull_request:
     branches: [main]
-
+    paths:
+      - 'GardenersMultitool.Client/**'
 jobs:
   build:
     name: Build Client

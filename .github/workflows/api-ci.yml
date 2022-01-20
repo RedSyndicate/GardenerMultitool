@@ -3,8 +3,12 @@ name: api-CI
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'GardenersMultitool.Client/**'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'GardenersMultitool.Client/**'
 
 jobs:
   build:
