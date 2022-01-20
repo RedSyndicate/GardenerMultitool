@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Concurrent;
 using System.Reflection;
-using GardenersMultitool.Api.CustomConfigurations;
+using CsvHelper.Configuration;
+using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
 using MediatR;
@@ -10,7 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 
 namespace GardenersMultitool.Api
 {
@@ -31,6 +32,15 @@ namespace GardenersMultitool.Api
         {
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly)
             .Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"))
+            .AddSingleton(config =>
+            {
+                var settings = config.GetService<IOptions<DatabaseSettings>>()?.Value;
+                if (settings != null) return new MongoClient(settings.ConnectionString).GetDatabase(settings.Database);
+                throw new ConfigurationException($"Uninitialized Database Settings");
+            })
+            .AddSingleton<ICollectionProxy<Plant>, PlantCollection>()
+            .AddSingleton<ICollectionProxy<Location>, LocationCollection>()
+            .AddSingleton<DataContext>()
             .AddSingleton<PlantService>()
                 //.AddPlantCache(_contentRoot) // Load files from api project directory
                 .AddSwaggerGen(c =>

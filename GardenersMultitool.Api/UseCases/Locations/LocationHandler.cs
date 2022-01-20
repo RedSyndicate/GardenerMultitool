@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GardenersMultitool.Domain.Entities;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using GardenersMultitool.Api.UseCases.Context;
 
 namespace GardenersMultitool.Api.UseCases.Locations
 {
     public abstract class LocationHandler 
     {
-        protected readonly IMongoCollection<Location> Context;
+        //protected readonly IMongoCollection<Location> Context;
+        protected readonly DataContext Context;
 
-        protected LocationHandler(IOptions<DatabaseSettings> settings)
+        protected LocationHandler(DataContext context)
         {
-            Context = new MongoClient(settings.Value.ConnectionString)
-                .GetDatabase(settings.Value.Database)
-                .GetCollection<Location>(nameof(Location).ToLowerInvariant());
+            Context = context;
         }
     }
+
+
 }
 

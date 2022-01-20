@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases.Locations
@@ -20,11 +20,14 @@ namespace GardenersMultitool.Api.UseCases.Locations
 
     public class GetLocationByIdHandler : LocationHandler, IRequestHandler<GetLocationById, Location>
     {
-        public GetLocationByIdHandler(IOptions<DatabaseSettings> settings) : base(settings)
+        public GetLocationByIdHandler(DataContext context) : base(context)
         {
         }
 
         public async Task<Location> Handle(GetLocationById request, CancellationToken cancellationToken) =>
-            await Context.Find(location => location.Id == request.Id).FirstOrDefaultAsync(cancellationToken);
+            await Context
+                .Collection<Location>()
+                .Find(location => location.Id == request.Id)
+                .FirstOrDefaultAsync(cancellationToken);
     }
 }
