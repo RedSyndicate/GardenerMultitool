@@ -23,7 +23,6 @@ jobs:
       with:
         node-version: '16.x'
     - run: |
-          npm install -g yarn
-          yarn
-          yarn build
-          yarn test
+          npm install
+          npm run build
+          npm run test
