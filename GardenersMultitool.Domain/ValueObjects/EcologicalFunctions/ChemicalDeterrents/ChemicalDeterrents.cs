@@ -24,7 +24,7 @@ namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.ChemicalDet
     }
     public class Herbicide : ValueObject, IChemicalDeterrent
     {
-        public string Label => "Hedge";
+        public string Label => "Herbicide";
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Label;

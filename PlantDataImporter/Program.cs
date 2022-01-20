@@ -10,6 +10,7 @@ using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using PlantDataImporter.Extensions;
 using System.Text;
+using System.Collections;
 
 namespace PlantDataImporter
 {
@@ -27,33 +28,29 @@ namespace PlantDataImporter
 
         }
 
-        private static void PlantPropertyCSVParser(IEnumerable<Plant> plants)
+        private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)
         {
             //This method returns to the console a list of all uniques values of a
             //given label on the CSV files. See var attribute of FlatString() below.
             var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
-            string[] plantPropertiesSBArray = plantPropertySB.ToString().Split("\r\n");
-            List<string> propertyList = new List<string>();
-
-            foreach (string property in plantPropertiesSBArray)
-                if (propertyList.Contains(property))
-                    continue;
-                else
-                    propertyList.Add(property);
-
-            foreach (var item in propertyList)
-                Console.WriteLine(item);
+            var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
+            foreach(var property in plantPropertiesHashSet)
+            {
+                Console.WriteLine(property);
+            }
 
             Console.ReadLine();
+            return plantPropertiesHashSet;
         }
 
         static StringBuilder FlatString(StringBuilder sb, Plant plant)
         {
-            var attribute = plant.EcologicalFunction;
+            var attributes = plant.EcologicalFunction;
             //if (attribute == null)
             //    return sb;
             //return sb.AppendLine(attribute);
-            return sb.AppendLine(attribute); // doesn't compile for Lists.
+            attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
+            return sb;
         }
     }
     public class Loader
@@ -115,4 +112,3 @@ namespace PlantDataImporter
         }
     }
 }
-
