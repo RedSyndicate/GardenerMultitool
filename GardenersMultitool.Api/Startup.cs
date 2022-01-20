@@ -29,7 +29,6 @@ namespace GardenersMultitool.Api
             services.AddSingleton<PlantService>();
 
             services
-                .AddPlantCache(AppContext.BaseDirectory)
                 .AddLocationCache()
                 .AddSwaggerGen(c =>
                 {
