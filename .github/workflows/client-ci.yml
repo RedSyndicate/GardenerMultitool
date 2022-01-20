@@ -1,10 +1,11 @@
-name: client-app-ci
+name: client-ci
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,3 +23,7 @@ jobs:
         yarn
         yarn build
         yarn test
+
+#TODO: Look into this later, update to google play, etc.
+#- name: Upload Android Release to Play Store
+#  uses: r0adkll/upload-google-play@v1

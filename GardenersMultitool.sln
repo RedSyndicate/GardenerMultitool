@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E739E433-BA5D-445D-80E4-7DDB13BFD2C7}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\api-ci.yml = .github\workflows\api-ci.yml
+		.github\workflows\client-ci.yml = .github\workflows\client-ci.yml
 	EndProjectSection
 EndProject
 Global
