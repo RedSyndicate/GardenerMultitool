@@ -1,9 +1,9 @@
 import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
 
-
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
+
 if (dev)
 	process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
@@ -13,10 +13,10 @@ const config = {
 	// for more information about preprocessors
 	preprocess: [
 		preprocess({
-			postcss: true
+			postcss: true,
+			typescript: './tsconfig.json'
 		})
 	],
-
 	kit: {
 		adapter: adapter({
 			pages: "dist",
@@ -24,10 +24,12 @@ const config = {
 			fallback: null,
 			precompress: false
 		}),
-
-		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte'
-	}
+		vite: {
+			plugins: []
+		}
+	},
+	// hydrate the <div id="svelte"> element in src/app.html
+	target: '#svelte',
 };
 
 export default config;

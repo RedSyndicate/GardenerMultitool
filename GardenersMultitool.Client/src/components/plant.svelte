@@ -2,7 +2,7 @@
 	export let plant;
 </script>
 
-<div
+<main
 	class="
 	flex p-6 bg-gray-100 text-gray-800 
 	text-center rounded-md 
@@ -14,4 +14,4 @@
 		alt={plant.name.value}
 	/>
 	{plant.name.value}
-</div>
+</main>

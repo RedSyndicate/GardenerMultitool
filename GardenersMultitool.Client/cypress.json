@@ -1,0 +1,9 @@
+{
+    "testFiles": "**/*e2e-spec.ts",
+    "component": {
+        "testFiles": "**/*.*spec.ts",
+        "viewportHeight": 500,
+        "viewportWidth": 700
+    },
+    "pluginsFile": "cypress/plugins/index.cjs"
+}
