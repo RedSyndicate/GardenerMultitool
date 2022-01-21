@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using GardenersMultitool.Api.UseCases;
 using GardenersMultitool.Api.UseCases.Locations;
 using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -35,9 +37,12 @@ namespace GardenersMultitool.Api.Controllers
         public async Task<Guid> CreateLocation() => 
             await _mediator.Send(new CreateNewLocation(), CancellationToken.None);
 
-        [HttpPost("add_plants")]
+        [HttpPut("add_plants")]
         public async Task<Location> AddPlants(List<Guid> plantIds, Guid locationId) => 
             await _mediator.Send(new AddPlantsToLocation(plantIds, locationId), CancellationToken.None);
+
+        [HttpGet("recommendations")]
+        public async Task<IEnumerable<Plant>> Recommendations(Guid locationId) => await _mediator.Send(new RecommendByLocation(locationId));
     }
 }
 
