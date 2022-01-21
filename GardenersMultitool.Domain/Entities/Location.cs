@@ -15,7 +15,7 @@ namespace GardenersMultitool.Domain.Entities
         public Guid Id { get; init; }
         public List<Plant> Plants { get; set; } = new();
         public string Name { get; set; }
-        public HabitationZone HabitationZone { get; set; }
+        public HardinessZone HardinessZone { get; set; }
         public pH SoilpH { get; set; }
         public ISunRequirement SunRequirements { get; }
         public IWildlife Wildlife { get; set; }
