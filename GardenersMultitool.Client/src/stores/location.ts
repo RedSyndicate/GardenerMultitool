@@ -12,5 +12,3 @@ const fetchLocations = async () => {
 
 	locations.set(await _apiClient.locationGet());
 };
-
-fetchLocations();

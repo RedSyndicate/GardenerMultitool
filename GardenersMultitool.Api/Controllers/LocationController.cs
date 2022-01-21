@@ -34,8 +34,7 @@ namespace GardenersMultitool.Api.Controllers
 
 
         [HttpPost]
-        public async Task<Guid> CreateLocation() =>
-            await _mediator.Send(new CreateNewLocation(), CancellationToken.None);
+        public async Task<Guid> CreateLocation() => await _mediator.Send(new CreateNewLocation(), CancellationToken.None);
 
         [HttpPut("add_plants")]
         public async Task<Location> AddPlants(List<Guid> plantIds, Guid locationId) =>
