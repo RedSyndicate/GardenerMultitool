@@ -19,9 +19,12 @@ namespace GardenersMultitool.Domain.ValueObjects
         public string Height { get; set; }
         public string Spread { get; set; }
         public string RootDepth { get; set; }
+        //build
         public string SeasonalInterest { get; set; }
         public string Notes { get; set; }
+        //build
         public string FlowerColor { get; set; }
+        //build
         public string RootType { get; set; }
         public string BloomTime { get; set; }
         public string FruitTime { get; set; }

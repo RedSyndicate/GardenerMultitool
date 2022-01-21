@@ -7,8 +7,8 @@ namespace GardenersMultitool.Domain.ValueObjects.Common
 {
     public class pH : ValueObject
     {
-        public decimal MinimumpH { get; }
-        public decimal MaximumpH { get; }
+        public decimal MinimumpH { get; } = 0;
+        public decimal MaximumpH { get; } = 0;
 
         public pH(decimal minimumpH, decimal maximumpH)
         {

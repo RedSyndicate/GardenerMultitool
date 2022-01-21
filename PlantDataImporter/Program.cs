@@ -11,6 +11,7 @@ using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using PlantDataImporter.Extensions;
 using System.Text;
 using System.Collections;
+using GardenersMultitool.Domain.ValueObjects.Common;
 
 namespace PlantDataImporter
 {
@@ -32,25 +33,55 @@ namespace PlantDataImporter
         {
             //This method returns to the console a list of all uniques values of a
             //given label on the CSV files. See var attribute of FlatString() below.
+            //var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
+            //var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
+
+            //foreach (var property in plantPropertiesHashSet)
+            //{
+            //    Console.WriteLine(property);
+            //}
+
+            //Console.ReadLine();
+            //return plantPropertiesHashSet;
             var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
             var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
-            foreach(var property in plantPropertiesHashSet)
+            var plantPropertyList = new List<string>();
+            
+            foreach (var property in plantPropertiesHashSet)
             {
-                Console.WriteLine(property);
+                if (!plantPropertyList.Contains(property))
+                {
+                    plantPropertyList.Add(property);
+                }
+                else
+                {
+                    continue;
+                }
             }
+
+            Console.WriteLine(plantPropertyList.ToString());
 
             Console.ReadLine();
             return plantPropertiesHashSet;
+
+
         }
 
         static StringBuilder FlatString(StringBuilder sb, Plant plant)
         {
-            var attributes = plant.EcologicalFunction;
+            //for soil pH:  ?? = if the value is null, create new object with -1, -1, else use value as-is
+            var soilPH = plant.SoilPH ?? new pH(-1, -1);
+            //for plant.Height: if value is null/empty, write "0", else write the attribute.
+            var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
 
+            var soilMoisture = plant.SoilMoisture;
+            
             //for List<IEnumerable> Types
-            attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
-            return sb;
+            //attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
+            //return sb;
             //^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            
+            return sb.Append(soilMoisture.ToString());
         }
     }
     public class Loader
@@ -93,9 +124,9 @@ namespace PlantDataImporter
 
             return plants;
         }
-        
+
         private static readonly List<string> _nonoWords = new() { "wax", "resin", "or polish", "resin or polish", "spray" };
-        private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());  
+        private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());
 
         private static string Clean(string arg1) => arg1;
 
