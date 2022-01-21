@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\" />
+    <Compile Remove="UseCases\**" />
+    <EmbeddedResource Remove="UseCases\**" />
+    <None Remove="UseCases\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ValueObjects\HumanUses\AromaticsFragrance\" />
     <Folder Include="ValueObjects\HumanUses\Biomass\" />
     <Folder Include="ValueObjects\HumanUses\CleanserScourer\" />
