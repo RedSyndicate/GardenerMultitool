@@ -12,5 +12,3 @@ const fetchAnnuals = async () => {
 
 	annuals.set(await _apiClient.plantAnnuals());
 };
-
-fetchAnnuals();
