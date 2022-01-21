@@ -193,7 +193,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    locationAddPlants(locationId: string | undefined, body: number[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
+    locationAddPlants(locationId: string | undefined, body: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
         let url_ = this.baseUrl + "/Location/add_plants?";
         if (locationId === null)
             throw new Error("The parameter 'locationId' cannot be null.");
@@ -250,72 +250,11 @@ export class Client {
     }
 
     /**
-     * @param plantId (optional) 
      * @param locationId (optional) 
      * @return Success
      */
-    locationAddPlant(plantId: number | undefined, locationId: string | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
-        let url_ = this.baseUrl + "/Location/add_plant?";
-        if (plantId === null)
-            throw new Error("The parameter 'plantId' cannot be null.");
-        else if (plantId !== undefined)
-            url_ += "plantId=" + encodeURIComponent("" + plantId) + "&";
-        if (locationId === null)
-            throw new Error("The parameter 'locationId' cannot be null.");
-        else if (locationId !== undefined)
-            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "PUT",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processLocationAddPlant(_response);
-        });
-    }
-
-    protected processLocationAddPlant(response: AxiosResponse): Promise<Location> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = Location.fromJS(resultData200);
-            return Promise.resolve<Location>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Location>(<any>null);
-    }
-
-    /**
-     * @param locationId (optional) 
-     * @return Success
-     */
-    locationEcologicalFunctions(locationId: string | undefined , cancelToken?: CancelToken | undefined): Promise<IPlantAttribute[]> {
-        let url_ = this.baseUrl + "/Location/ecological_functions?";
+    locationRecommendations(locationId: string | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Location/recommendations?";
         if (locationId === null)
             throw new Error("The parameter 'locationId' cannot be null.");
         else if (locationId !== undefined)
@@ -338,11 +277,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLocationEcologicalFunctions(_response);
+            return this.processLocationRecommendations(_response);
         });
     }
 
-    protected processLocationEcologicalFunctions(response: AxiosResponse): Promise<IPlantAttribute[]> {
+    protected processLocationRecommendations(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -359,18 +298,18 @@ export class Client {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(IPlantAttribute.fromJS(item));
+                    result200!.push(Plant.fromJS(item));
             }
             else {
                 result200 = <any>null;
             }
-            return Promise.resolve<IPlantAttribute[]>(result200);
+            return Promise.resolve<Plant[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<IPlantAttribute[]>(<any>null);
+        return Promise.resolve<Plant[]>(<any>null);
     }
 
     /**
@@ -1232,50 +1171,6 @@ export interface IPH {
     maximumpH?: number;
 }
 
-export class PHMaybe implements IPHMaybe {
-    value?: PH;
-    readonly hasValue?: boolean;
-    readonly hasNoValue?: boolean;
-
-    constructor(data?: IPHMaybe) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"] ? PH.fromJS(_data["value"]) : <any>undefined;
-            (<any>this).hasValue = _data["hasValue"];
-            (<any>this).hasNoValue = _data["hasNoValue"];
-        }
-    }
-
-    static fromJS(data: any): PHMaybe {
-        data = typeof data === 'object' ? data : {};
-        let result = new PHMaybe();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        data["hasValue"] = this.hasValue;
-        data["hasNoValue"] = this.hasNoValue;
-        return data;
-    }
-}
-
-export interface IPHMaybe {
-    value?: PH;
-    hasValue?: boolean;
-    hasNoValue?: boolean;
-}
-
 export class IPlantAttribute implements IIPlantAttribute {
     readonly label?: string | undefined;
 
@@ -1313,7 +1208,8 @@ export interface IIPlantAttribute {
 }
 
 export class Plant implements IPlant {
-    id?: number;
+    id?: string;
+    plantId?: number;
     name?: Name;
     scientificName?: Name;
     binomial?: string | undefined;
@@ -1335,7 +1231,7 @@ export class Plant implements IPlant {
     lightRequired?: string | undefined;
     hardinessZone?: string | undefined;
     soilMoisture?: string | undefined;
-    soilPH?: PHMaybe;
+    soilPH?: PH;
     ecologicalFunction?: IPlantAttribute[] | undefined;
     humanUse?: IPlantAttribute[] | undefined;
 
@@ -1351,6 +1247,7 @@ export class Plant implements IPlant {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.plantId = _data["plantId"];
             this.name = _data["name"] ? Name.fromJS(_data["name"]) : <any>undefined;
             this.scientificName = _data["scientificName"] ? Name.fromJS(_data["scientificName"]) : <any>undefined;
             this.binomial = _data["binomial"];
@@ -1372,7 +1269,7 @@ export class Plant implements IPlant {
             this.lightRequired = _data["lightRequired"];
             this.hardinessZone = _data["hardinessZone"];
             this.soilMoisture = _data["soilMoisture"];
-            this.soilPH = _data["soilPH"] ? PHMaybe.fromJS(_data["soilPH"]) : <any>undefined;
+            this.soilPH = _data["soilPH"] ? PH.fromJS(_data["soilPH"]) : <any>undefined;
             if (Array.isArray(_data["ecologicalFunction"])) {
                 this.ecologicalFunction = [] as any;
                 for (let item of _data["ecologicalFunction"])
@@ -1396,6 +1293,7 @@ export class Plant implements IPlant {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["plantId"] = this.plantId;
         data["name"] = this.name ? this.name.toJSON() : <any>undefined;
         data["scientificName"] = this.scientificName ? this.scientificName.toJSON() : <any>undefined;
         data["binomial"] = this.binomial;
@@ -1433,7 +1331,8 @@ export class Plant implements IPlant {
 }
 
 export interface IPlant {
-    id?: number;
+    id?: string;
+    plantId?: number;
     name?: Name;
     scientificName?: Name;
     binomial?: string | undefined;
@@ -1455,15 +1354,15 @@ export interface IPlant {
     lightRequired?: string | undefined;
     hardinessZone?: string | undefined;
     soilMoisture?: string | undefined;
-    soilPH?: PHMaybe;
+    soilPH?: PH;
     ecologicalFunction?: IPlantAttribute[] | undefined;
     humanUse?: IPlantAttribute[] | undefined;
 }
 
-export class HabitationZone implements IHabitationZone {
+export class HardinessZone implements IHardinessZone {
     readonly zone?: number;
 
-    constructor(data?: IHabitationZone) {
+    constructor(data?: IHardinessZone) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1478,9 +1377,9 @@ export class HabitationZone implements IHabitationZone {
         }
     }
 
-    static fromJS(data: any): HabitationZone {
+    static fromJS(data: any): HardinessZone {
         data = typeof data === 'object' ? data : {};
-        let result = new HabitationZone();
+        let result = new HardinessZone();
         result.init(data);
         return result;
     }
@@ -1492,7 +1391,7 @@ export class HabitationZone implements IHabitationZone {
     }
 }
 
-export interface IHabitationZone {
+export interface IHardinessZone {
     zone?: number;
 }
 
@@ -1560,7 +1459,7 @@ export class Location implements ILocation {
     id?: string;
     plants?: Plant[] | undefined;
     name?: string | undefined;
-    habitationZone?: HabitationZone;
+    hardinessZone?: HardinessZone;
     soilpH?: PH;
     sunRequirements?: ISunRequirement;
     wildlife?: IWildlife;
@@ -1586,7 +1485,7 @@ export class Location implements ILocation {
                     this.plants!.push(Plant.fromJS(item));
             }
             this.name = _data["name"];
-            this.habitationZone = _data["habitationZone"] ? HabitationZone.fromJS(_data["habitationZone"]) : <any>undefined;
+            this.hardinessZone = _data["hardinessZone"] ? HardinessZone.fromJS(_data["hardinessZone"]) : <any>undefined;
             this.soilpH = _data["soilpH"] ? PH.fromJS(_data["soilpH"]) : <any>undefined;
             this.sunRequirements = _data["sunRequirements"] ? ISunRequirement.fromJS(_data["sunRequirements"]) : <any>undefined;
             this.wildlife = _data["wildlife"] ? IWildlife.fromJS(_data["wildlife"]) : <any>undefined;
@@ -1616,7 +1515,7 @@ export class Location implements ILocation {
                 data["plants"].push(item.toJSON());
         }
         data["name"] = this.name;
-        data["habitationZone"] = this.habitationZone ? this.habitationZone.toJSON() : <any>undefined;
+        data["hardinessZone"] = this.hardinessZone ? this.hardinessZone.toJSON() : <any>undefined;
         data["soilpH"] = this.soilpH ? this.soilpH.toJSON() : <any>undefined;
         data["sunRequirements"] = this.sunRequirements ? this.sunRequirements.toJSON() : <any>undefined;
         data["wildlife"] = this.wildlife ? this.wildlife.toJSON() : <any>undefined;
@@ -1635,7 +1534,7 @@ export interface ILocation {
     id?: string;
     plants?: Plant[] | undefined;
     name?: string | undefined;
-    habitationZone?: HabitationZone;
+    hardinessZone?: HardinessZone;
     soilpH?: PH;
     sunRequirements?: ISunRequirement;
     wildlife?: IWildlife;

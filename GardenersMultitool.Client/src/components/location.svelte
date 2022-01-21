@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let plant;
+	export let location;
 </script>
 
 <div
@@ -10,10 +10,10 @@
 >
 	<img
 		class="h-40"
-		src={`https://via.placeholder.com/460x640/333333/cccccc?text=${plant.name.value}`}
-		alt={plant.name.value}
+		src={`https://via.placeholder.com/460x640/333333/cccccc?text=${location.name.value}`}
+		alt={location.name.value}
 	/>
-	{plant.name.value}
+	{location.name.value}
 </div>
 
 <slot />

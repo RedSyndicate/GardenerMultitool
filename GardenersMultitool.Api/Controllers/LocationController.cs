@@ -34,11 +34,11 @@ namespace GardenersMultitool.Api.Controllers
 
 
         [HttpPost]
-        public async Task<Guid> CreateLocation() => 
+        public async Task<Guid> CreateLocation() =>
             await _mediator.Send(new CreateNewLocation(), CancellationToken.None);
 
         [HttpPut("add_plants")]
-        public async Task<Location> AddPlants(List<Guid> plantIds, Guid locationId) => 
+        public async Task<Location> AddPlants(List<Guid> plantIds, Guid locationId) =>
             await _mediator.Send(new AddPlantsToLocation(plantIds, locationId), CancellationToken.None);
 
         [HttpGet("recommendations")]
