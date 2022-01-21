@@ -26,10 +26,10 @@ namespace GardenersMultitool.Api.UseCases.Locations
     {
         public override async Task<IEnumerable<Plant>> Handle(RecommendByLocation request, CancellationToken cancellationToken)
         {
-            var plants = await Context.Collection<Plant>()
+            var plants = await Context.Plants
                 .Find(_ => true)
                 .ToListAsync(cancellationToken);
-            var location = await Context.Collection<Location>()
+            var location = await Context.Locations
                 .Find(location => location.Id == request.LocationId)
                 .FirstOrDefaultAsync(cancellationToken);
             return PlantRecommendationService.Create(location, plants).Recommend();

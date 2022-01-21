@@ -16,7 +16,7 @@ namespace GardenersMultitool.Api.UseCases.Locations
         public GetAllRequestsHandler(DataContext context) : base(context) { }
 
         public override async Task<IEnumerable<Location>> Handle(GetAllLocations request, CancellationToken cancellationToken) =>
-            await Context.Collection<Location>().Find(location => true).ToListAsync(cancellationToken);
+            await Context.Locations.Find(location => true).ToListAsync(cancellationToken);
             
     }
 }

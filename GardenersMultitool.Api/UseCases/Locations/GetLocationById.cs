@@ -25,8 +25,7 @@ namespace GardenersMultitool.Api.UseCases.Locations
         }
 
         public override async Task<Location> Handle(GetLocationById request, CancellationToken cancellationToken) =>
-            await Context
-                .Collection<Location>()
+            await Context.Locations
                 .Find(location => location.Id == request.Id)
                 .FirstOrDefaultAsync(cancellationToken);
     }
