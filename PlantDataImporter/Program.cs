@@ -46,11 +46,11 @@ namespace PlantDataImporter
         static StringBuilder FlatString(StringBuilder sb, Plant plant)
         {
             var attributes = plant.EcologicalFunction;
-            //if (attribute == null)
-            //    return sb;
-            //return sb.AppendLine(attribute);
+
+            //for List<IEnumerable> Types
             attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
             return sb;
+            //^^^^^^^^^^^^^^^^^^^^^^^^^^^
         }
     }
     public class Loader
