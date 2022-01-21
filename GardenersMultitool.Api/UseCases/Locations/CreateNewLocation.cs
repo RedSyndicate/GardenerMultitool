@@ -10,11 +10,11 @@ namespace GardenersMultitool.Api.UseCases
 {
     public class CreateNewLocation : IRequest<Guid> { }
 
-    public class CreateNewLocationHandler : LocationHandler, IRequestHandler<CreateNewLocation, Guid>
+    public class CreateNewRequestHandler : Locations.RequestHandler<CreateNewLocation, Guid>
     {
-        public CreateNewLocationHandler(DataContext context) : base(context) { }
+        public CreateNewRequestHandler(DataContext context) : base(context) { }
 
-        public async Task<Guid> Handle(CreateNewLocation request, CancellationToken cancellationToken)
+        public override async Task<Guid> Handle(CreateNewLocation request, CancellationToken cancellationToken)
         {
             var location = Location.Create();
             await Context.Collection<Location>().InsertOneAsync(Location.Create(), cancellationToken: cancellationToken);

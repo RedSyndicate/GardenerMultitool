@@ -22,16 +22,20 @@ namespace GardenersMultitool.Api.UseCases.Locations
         }
     }
 
-    public class RecommendByLocationHandler : LocationHandler, IRequestHandler<RecommendByLocation, IEnumerable<Plant>>
+    public class RecommendByRequestHandler : RequestHandler<RecommendByLocation, IEnumerable<Plant>>
     {
-        public async Task<IEnumerable<Plant>> Handle(RecommendByLocation request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<Plant>> Handle(RecommendByLocation request, CancellationToken cancellationToken)
         {
-            var plants = await Context.Collection<Plant>().Find(_ => true).ToListAsync();
-            var location = await Context.Collection<Location>().Find(location => location.Id == request.LocationId).FirstOrDefaultAsync(cancellationToken);
+            var plants = await Context.Collection<Plant>()
+                .Find(_ => true)
+                .ToListAsync(cancellationToken);
+            var location = await Context.Collection<Location>()
+                .Find(location => location.Id == request.LocationId)
+                .FirstOrDefaultAsync(cancellationToken);
             return PlantRecommendationService.Create(location, plants).Recommend();
         }
 
-        public RecommendByLocationHandler(DataContext context) : base(context)
+        public RecommendByRequestHandler(DataContext context) : base(context)
         {
         }
     }
