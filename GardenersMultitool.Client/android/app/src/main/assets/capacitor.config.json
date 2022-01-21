@@ -1,0 +1,6 @@
+{
+	"appId": "org.redsyndicate.gm",
+	"appName": "gardeners-multitool",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}

@@ -5,7 +5,8 @@ namespace PlantDataImporter
     public class PlantDto
     {
         //Properties modelled after .csv
-        public int Id { get; set; }
+        [Name("Id")]
+        public int PlantId { get; set; }
         public string Name { get; set; }
         [Name("Scientific name")]
         public string ScientificName { get; set; }
@@ -50,7 +51,7 @@ namespace PlantDataImporter
 
         public override string ToString()
         {
-            return $"Object Id:{Id}, Name: {Name}.";
+            return $"Object Id:{PlantId}, Name: {Name}.";
         }
     }
 }
