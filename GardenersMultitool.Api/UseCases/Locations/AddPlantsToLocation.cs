@@ -33,12 +33,13 @@ namespace GardenersMultitool.Api.UseCases.Locations
         public async Task<Location> Handle(AddPlantsToLocation request, CancellationToken cancellationToken)
         {
             var (plantIds, locationId) = request;
-            var location = await Context.Collection<Location>().Find(location => location.Id == locationId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+            var location = await Context.Collection<Location>().Find(location => location.Id == locationId).FirstOrDefaultAsync(cancellationToken);
             var plants = await Context.Collection<Plant>().Find(plant => plantIds.Contains(plant.Id)).ToListAsync();
             plants.ForEach(plant => location.AddPlant(plant));
+            var updateDef = Builders<Location>.Update.Set(l => l.Plants, location.Plants);
+            await Context.Collection<Location>().UpdateOneAsync(l => l.Id == location.Id, updateDef, cancellationToken: cancellationToken);
 
-            await Context.Collection<Location>().FindOneAndUpdate(loc => loc.Id == location.Id, )
-            return new Location();
+            return location;
         }
 
         public AddPlantsToLocationHandler(DataContext context) : base(context)

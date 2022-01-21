@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using CsvHelper.Configuration.Attributes;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects.Common;
@@ -36,6 +37,11 @@ namespace GardenersMultitool.Domain.ValueObjects
         public pH SoilPH { get; set; }
         public List<IPlantAttribute> EcologicalFunction { get; set; }
         public List<IPlantAttribute> HumanUse { get; set; }
+
+        public bool CompactionTolerated(bool compaction) => true;
+        public bool SoilPHTolerated(pH soilPh) => true;
+        public bool HardinessZoneTolerable(HardinessZone hardiness) => true;
     }
+
 }
 
