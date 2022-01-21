@@ -1,16 +1,10 @@
-﻿using GardenersMultitool.Domain.Entities;
-using GardenersMultitool.Domain.ValueObjects;
+﻿using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.Common;
-using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
-using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Wildlife;
-using GardenersMultitool.Domain.ValueObjects.PlantType;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace GardenersMultitool.Api
@@ -45,7 +39,7 @@ namespace GardenersMultitool.Api
 
             var mongoDatabase = mongoClient.GetDatabase(settings.Value.Database);
 
-            _collection = mongoDatabase.GetCollection<Plant>(typeof(Plant).Name.ToLower(), null);
+            _collection = mongoDatabase.GetCollection<Plant>(nameof(Plant).ToLowerInvariant());
         }
         public async Task<List<Plant>> GetAsync() =>
         await _collection.Find(_ => true).ToListAsync();

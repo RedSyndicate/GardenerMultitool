@@ -7,13 +7,62 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Permaculture_Plant_CSVs\**" />
-    <Content Remove="Permaculture_Plant_CSVs\**" />
-    <EmbeddedResource Remove="Permaculture_Plant_CSVs\**" />
-    <None Remove="Permaculture_Plant_CSVs\**" />
+    <None Remove="Permaculture_Plant_CSVs\Annuals.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Aquatics.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Biennials.csv" />
+    <None Remove="Permaculture_Plant_CSVs\DeciduousShrubs.csv" />
+    <None Remove="Permaculture_Plant_CSVs\DeciduousTrees.csv" />
+    <None Remove="Permaculture_Plant_CSVs\EvergreenShrubs.csv" />
+    <None Remove="Permaculture_Plant_CSVs\EvergreenTrees.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Ferns.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Grasses.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Mosses.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Perennials.csv" />
+    <None Remove="Permaculture_Plant_CSVs\Vines.csv" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Annuals.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Aquatics.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Biennials.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\DeciduousShrubs.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\DeciduousTrees.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\EvergreenShrubs.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\EvergreenTrees.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Ferns.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Grasses.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Mosses.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Perennials.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Permaculture_Plant_CSVs\Vines.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
@@ -22,6 +71,10 @@
   <ItemGroup>
     <ProjectReference Include="..\GardenersMultitool.Domain\GardenersMultitool.Domain.csproj" />
     <ProjectReference Include="..\PlantDataImporter\PlantDataImporter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UseCases\Plants\" />
   </ItemGroup>
 
 </Project>
