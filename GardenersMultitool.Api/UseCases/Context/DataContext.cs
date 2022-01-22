@@ -37,7 +37,7 @@ namespace GardenersMultitool.Api.UseCases.Context
         private IMongoCollection<T> _collection;
 
         public IMongoCollection<T> Collection => _collection ??= _database
-            .GetCollection<T>(nameof(T).ToLowerInvariant());
+            .GetCollection<T>(typeof(T).Name.ToLowerInvariant());
 
         protected CollectionProxy(IMongoDatabase database)
         {

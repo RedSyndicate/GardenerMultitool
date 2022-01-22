@@ -7,20 +7,23 @@ namespace GardenersMultitool.Domain.ValueObjects
     public class HardinessZone : ValueObject
     {
         public int Zone { get; }
+        public bool NotKnown => Zone == 0;
 
         public HardinessZone(int zone)
         {
-            if (0 < Zone && Zone < 14)
+            if (zone is >= 0 and < 14)
                 Zone = zone;
             else
                 throw new ArgumentOutOfRangeException();
         }
 
-
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Zone;
         }
+
+        public static bool operator<(HardinessZone a, HardinessZone b) => a.Zone < b.Zone;
+        public static bool operator >(HardinessZone a, HardinessZone b) => a.Zone > b.Zone;
     }
 
     public class HardinessZoneRange : ValueObject
@@ -39,5 +42,7 @@ namespace GardenersMultitool.Domain.ValueObjects
             yield return MaximumHardinessZone;
             yield return MinimumHardinessZone;
         }
+
+        public bool IsCompatible(HardinessZone hardiness) => MinimumHardinessZone < hardiness && hardiness < MaximumHardinessZone;
     }
 }

@@ -4,10 +4,16 @@ using System.Threading.Tasks;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using MediatR;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases
 {
-    public class CreateNewLocation : IRequest<Guid> { }
+    public class CreateNewLocation : IRequest<Guid>
+    {
+        public string Name { get; set; }
+        public int HardinessZone { get; set; }
+    }
 
     public class CreateNewLocationHandler : Locations.RequestHandler<CreateNewLocation, Guid>
     {
@@ -15,8 +21,8 @@ namespace GardenersMultitool.Api.UseCases
 
         public override async Task<Guid> Handle(CreateNewLocation request, CancellationToken cancellationToken)
         {
-            var location = Location.Create();
-            await Context.Locations.InsertOneAsync(Location.Create(), cancellationToken: cancellationToken);
+            var location = Location.Create(request.Name, request.HardinessZone);
+            await Context.Locations.InsertOneAsync(location, cancellationToken: cancellationToken);
             return location.Id;
         }
     }
