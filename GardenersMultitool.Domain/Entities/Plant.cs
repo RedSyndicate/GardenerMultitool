@@ -33,15 +33,15 @@ namespace GardenersMultitool.Domain.ValueObjects
         public string InsectPredation { get; set; }
         public string Disease { get; set; }
         public string LightRequired { get; set; }
-        public string HardinessZone { get; set; }
+        public HardinessZoneRange HardinessZone { get; set; }
         public string SoilMoisture { get; set; }
         public pH SoilPH { get; set; }
         public List<IPlantAttribute> EcologicalFunction { get; set; }
         public List<IPlantAttribute> HumanUse { get; set; }
 
         public bool CompactionTolerated(bool compaction) => true;
-        public bool SoilPHTolerated(pH soilPh) => true;
-        public bool HardinessZoneTolerable(HardinessZone hardiness) => true;
+        public bool SoilPHTolerated(pH soilPh) => SoilPH?.IsCompatible(soilPh) ?? true;
+        public bool HardinessZoneTolerable(HardinessZone hardiness) => HardinessZone?.IsCompatible(hardiness) ?? true;
     }
 
 }

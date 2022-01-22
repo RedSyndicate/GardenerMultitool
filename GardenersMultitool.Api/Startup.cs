@@ -1,9 +1,11 @@
+using System.Linq;
 using System.Reflection;
 using CsvHelper.Configuration;
 using GardenersMultitool.Api.CustomConfigurations;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
+using GardenersMultitool.Domain.ValueObjects.Common;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +41,6 @@ namespace GardenersMultitool.Api
             .AddSingleton(config =>
             {
                 var settings = config.GetService<IOptions<DatabaseSettings>>()?.Value;
-                BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
                 if (settings != null)
                     return new MongoClient(settings.ConnectionString).GetDatabase(settings.Database);
@@ -49,11 +50,31 @@ namespace GardenersMultitool.Api
             .AddSingleton<ICollectionProxy<Location>, LocationCollection>()
             .AddSingleton<DataContext>()
             .AddSingleton<PlantService>()
-                //.AddPlantCache(_contentRoot) // Load files from api project directory
-                .AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
-                });
+            //.AddPlantCache(_contentRoot) // Load files from api project directory
+            .AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
+            });
+
+            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+
+            foreach (var t in types)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            BsonClassMap.RegisterClassMap<pH>(ph =>
+            {
+                ph.AutoMap();
+                ph.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
+            });
+
+            BsonClassMap.RegisterClassMap<Plant>(p =>
+            {
+                p.AutoMap();
+                p.MapCreator(p => new Plant());
+                p.MapProperty(p => p.SoilPH);
+            });
 
             services.AddControllers();
         }

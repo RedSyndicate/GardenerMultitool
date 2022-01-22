@@ -25,8 +25,8 @@ namespace GardenersMultitool.Domain.Entities
         public static Location Create() =>
             new() {Id = Guid.NewGuid()};
 
-        public static Location Create(string name) =>
-            new() {Id = Guid.NewGuid(), Name = name};
+        public static Location Create(string name, int hardinessZone) =>
+            new() {Id = Guid.NewGuid(), Name = name, HardinessZone = new HardinessZone(hardinessZone)};
 
         public Result<Plant> AddPlant(Plant value)
         {
