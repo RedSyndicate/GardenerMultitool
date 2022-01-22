@@ -51,7 +51,7 @@ namespace PlantDataImporter
                         .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Where(FilterBullshit)
                         .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses)))
-                .ForMember(dest => dest.HardinessZone, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.HardinessZone, opt => opt.MapFrom(src =>
                     src.HardinessZone
                         .Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Select(s => s == "?" ? 0.ToString() : s)
