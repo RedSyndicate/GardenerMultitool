@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { each } from 'svelte/internal';
-	import { locations } from '../stores/location';
+	import { each, onMount } from 'svelte/internal';
+	import { locations, fetchLocations } from '../stores/location';
 	import Location from '../components/location.svelte';
+	onMount(() => {
+		fetchLocations();
+	});
 </script>
 
 <svelte:head>

@@ -34,7 +34,7 @@ namespace GardenersMultitool.Api
             .Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"))
             .AddSingleton(config =>
             {
-                var settings = config.GetService<IOptions<DatabaseSettings>>()?.Value;
+                var settings = config.GetService<IOptions<DatabaseSettings>>().Value;
                 if (settings != null) return new MongoClient(settings.ConnectionString).GetDatabase(settings.Database);
                 throw new ConfigurationException($"Uninitialized Database Settings");
             })

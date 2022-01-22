@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/GardenersMultitool.Api/GardenersMultitool.Api.csproj",
+                "${workspaceFolder}\\GardenersMultitool.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/GardenersMultitool.Api/GardenersMultitool.Api.csproj",
+                "${workspaceFolder}\\GardenersMultitool.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/GardenersMultitool.Api/GardenersMultitool.Api.csproj",
+                "${workspaceFolder}\\GardenersMultitool.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
