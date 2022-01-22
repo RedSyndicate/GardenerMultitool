@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using CsvHelper.Configuration.Attributes;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects.Common;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace GardenersMultitool.Domain.ValueObjects
 {
     public class Plant : IAggregateRoot
     {
         [Ignore]
+        [BsonId]
         public Guid Id { get; set; }
         public int PlantId { get; set; }
         public Name Name { get; set; }

@@ -1,0 +1,30 @@
+#TODO: Look into this later, update to google play, etc.
+#- name: Upload Android Release to Play Store
+#  uses: r0adkll/upload-google-play@v1
+
+name: client-CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "GardenersMultitool.Client/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "GardenersMultitool.Client/**"
+jobs:
+  build:
+    name: Build Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
+      - name: install, build and test
+        run: |
+          npm install
+          npm run build
+          #npm run test # enable later when testing is stable
+        working-directory: "GardenersMultitool.Client/"

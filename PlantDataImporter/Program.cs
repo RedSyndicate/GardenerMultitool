@@ -66,9 +66,9 @@ namespace PlantDataImporter
 
             return plants;
         }
-        
+
         private static readonly List<string> _nonoWords = new() { "wax", "resin", "or polish", "resin or polish", "spray" };
-        private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());  
+        private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());
 
         private static string Clean(string arg1) => arg1;
 
