@@ -16,10 +16,11 @@ namespace GardenersMultitool.Domain.ValueObjects
         public Name Name { get; set; }
         public Name ScientificName { get; set; }
         public string Binomial { get; set; }
-        public IPlantType PlantType { get; set; }
-        public string Height { get; set; }
-        public string Spread { get; set; }
-        public string RootDepth { get; set; }
+        public IPlantType PlantType { get; set; } 
+        public string Height { get; set; } // ez
+        public string Spread { get; set; } // wtf
+       
+        public string RootDepth { get; set; } // don't need
         //build
         public string SeasonalInterest { get; set; }
         public string Notes { get; set; }
@@ -32,12 +33,12 @@ namespace GardenersMultitool.Domain.ValueObjects
         public string Texture { get; set; }
         public string Form { get; set; }
         public string GrowthRate { get; set; }
-        public string InsectPredation { get; set; }
-        public string Disease { get; set; }
+        public string InsectPredation { get; set; } 
+        public string Disease { get; set; } 
         public string LightRequired { get; set; }
         public string HardinessZone { get; set; }
-        public string SoilMoisture { get; set; }
-        public pH SoilPH { get; set; }
+        public string SoilMoisture { get; set; } 
+        public pH SoilPH { get; set; } 
         public List<IPlantAttribute> EcologicalFunction { get; set; }
         public List<IPlantAttribute> HumanUse { get; set; }
 
