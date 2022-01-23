@@ -22,11 +22,11 @@ namespace PlantDataImporter
             if (args.Length < 1)
                 return;
 
-
-
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             var plants = new Loader().Run(args[0], directory);
-            //var plant_list = PlantPropertyCSVParser(plants);
+
+            PlantPropertyCSVParser(plants);
+
         }
 
         private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)
@@ -44,43 +44,44 @@ namespace PlantDataImporter
             //Console.ReadLine();
             //return plantPropertiesHashSet;
             var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
-            var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").Distinct().ToHashSet();
+            var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
             var plantPropertyList = new List<string>();
             
             foreach (var property in plantPropertiesHashSet)
             {
                 if (!plantPropertyList.Contains(property))
+                {
                     plantPropertyList.Add(property);
+                }
                 else
+                {
                     continue;
+                }
             }
 
-            for (int i = 0; i < plantPropertyList.Count(); i++)
-            {
-                Console.WriteLine(plantPropertyList[i].ToString());
-            }
+            Console.WriteLine(plantPropertyList.ToString());
 
+            Console.ReadLine();
             return plantPropertiesHashSet;
+
+
         }
 
         static StringBuilder FlatString(StringBuilder sb, Plant plant)
         {
             //for soil pH:  ?? = if the value is null, create new object with -1, -1, else use value as-is
-            //var soilPH = plant.SoilPH ?? new pH(-1, -1);
+            var soilPH = plant.SoilPH ?? new pH(-1, -1);
             //for plant.Height: if value is null/empty, write "0", else write the attribute.
-            //var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
-            //var soilMoisture = plant.SoilMoisture;
-            //return sb.AppendLine(soilMoisture);
+            var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
 
+            var soilMoisture = plant.SoilMoisture;
+            
             //for List<IEnumerable> Types
-            //var attributes = plant.EcologicalFunction;
             //attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
             //return sb;
             //^^^^^^^^^^^^^^^^^^^^^^^^^^^
             
-            var plantAttributes = plant.SoilPH.ToString();
-
-            return sb.AppendLine(plantAttributes); 
+            return sb.Append(soilMoisture.ToString());
         }
     }
     public class Loader
