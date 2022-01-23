@@ -69,7 +69,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../GardenersMultitool.Client/src/lib/client.ts",
+      "output": "../GardenersMultitool.Client/src/lib/api/client.ts",
       "newLineBehavior": "Auto"
     }
   }
