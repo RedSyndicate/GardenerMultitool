@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Reflection;
 using CsvHelper.Configuration;
-using GardenersMultitool.Api.CustomConfigurations;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
@@ -56,6 +55,9 @@ namespace GardenersMultitool.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
             });
 
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
+
             var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
 
             foreach (var t in types)
@@ -69,11 +71,10 @@ namespace GardenersMultitool.Api
                 ph.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
             });
 
-            BsonClassMap.RegisterClassMap<Plant>(p =>
+            BsonClassMap.RegisterClassMap<Plant>(map =>
             {
-                p.AutoMap();
-                p.MapCreator(p => new Plant());
-                p.MapProperty(p => p.SoilPH);
+                map.AutoMap();
+                map.MapProperty(p => p.Id).SetSerializer(new GuidSerializer(BsonType.String));
             });
 
             services.AddControllers();

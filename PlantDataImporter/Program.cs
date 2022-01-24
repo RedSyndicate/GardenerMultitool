@@ -8,8 +8,12 @@ using System.Linq;
 using AutoMapper;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using PlantDataImporter.Extensions;
+using Newtonsoft.Json;
 
 namespace PlantDataImporter
 {
@@ -21,12 +25,26 @@ namespace PlantDataImporter
                 return;
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-            var plants = new Loader().Run(args[0], directory);
+            var plants = (new Loader().Run(args[0], directory)).ToList();
+
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonClassMap.RegisterClassMap<Plant>(map =>
+            {
+                map.AutoMap();
+                map.MapProperty(p => p.Id).SetSerializer(new GuidSerializer(BsonType.String));
+            });
+            foreach (var plant in plants)
+            {
+                plant.Id = Guid.NewGuid();
+            }
+
             new MongoClient("mongodb://localhost")
                 .GetDatabase("gardeners-multitool")
                 .GetCollection<Plant>(nameof(Plant)
                     .ToLowerInvariant())
                 .InsertManyAsync(plants);
+
+            File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plants));
             Console.ReadLine();
         }
     }

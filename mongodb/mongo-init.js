@@ -10,6 +10,6 @@ db = new Mongo().getDB("gardeners-multitool");
 db.createCollection('plant', { capped: false });
 db.createCollection('location', { capped: false });
 
-db.plant.insertMany(po, forceServerObjectId = true);
+db.plant.insertMany(po);
 
 print('END #################################################################');

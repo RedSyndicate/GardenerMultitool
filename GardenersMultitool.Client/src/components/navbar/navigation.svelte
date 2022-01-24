@@ -38,7 +38,7 @@
 			transition:fly={{ x: -200, duration: 400, easing: backInOut }}
 			class="drawer-side hidden"
 		>
-			<label for="nav-drawer" class="drawer-overlay opacity-50" />
+			<label for="nav-drawer" class="drawer-overlay" />
 			<ul class="m-0 p-4 menu w-60 bg-base-100 h-screen">
 				<li>
 					<a href="/" class="btn btn-block btn-ghost">Dashboard</a>
