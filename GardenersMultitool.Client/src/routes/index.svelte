@@ -1,17 +1,20 @@
 <script lang="ts">
-	import { each } from 'svelte/internal';
-	import { annuals } from '../stores/plantstore';
-	import Plant from '../components/plant.svelte';
+	import { each, onMount } from 'svelte/internal';
+	import { locations, fetchLocations } from '../stores/location';
+	import Location from '../components/location.svelte';
+	onMount(() => {
+		fetchLocations();
+	});
 </script>
 
 <svelte:head>
 	<title>Gardener Multitool</title>
 </svelte:head>
 
-<h1>Plants</h1>
+<h1>Locations</h1>
 
 <div class="py-4 grid gap-4 md:grid-cols-6 grid-cols-1">
-	{#each $annuals as plant}
-		<Plant {plant} />
+	{#each $locations as location}
+		<Location {location} />
 	{/each}
 </div>

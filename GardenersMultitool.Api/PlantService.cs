@@ -15,26 +15,6 @@ namespace GardenersMultitool.Api
 
         public PlantService(IOptions<DatabaseSettings> settings)
         {
-            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
-
-            foreach (var t in types)
-            {
-                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
-            }
-
-            BsonClassMap.RegisterClassMap<pH>(ph =>
-            {
-                ph.AutoMap();
-                ph.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
-            });
-
-            BsonClassMap.RegisterClassMap<Plant>(p =>
-            {
-                p.AutoMap();
-                p.MapCreator(p => new Plant());
-                p.MapProperty(p => p.SoilPH);
-            });
-
             var mongoClient = new MongoClient(settings.Value.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(settings.Value.Database);

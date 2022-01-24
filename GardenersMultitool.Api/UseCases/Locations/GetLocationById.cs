@@ -18,15 +18,14 @@ namespace GardenersMultitool.Api.UseCases.Locations
         }
     }
 
-    public class GetLocationByIdHandler : LocationHandler, IRequestHandler<GetLocationById, Location>
+    public class GetRequestByIdHandler : RequestHandler<GetLocationById, Location>
     {
-        public GetLocationByIdHandler(DataContext context) : base(context)
+        public GetRequestByIdHandler(DataContext context) : base(context)
         {
         }
 
-        public async Task<Location> Handle(GetLocationById request, CancellationToken cancellationToken) =>
-            await Context
-                .Collection<Location>()
+        public override async Task<Location> Handle(GetLocationById request, CancellationToken cancellationToken) =>
+            await Context.Locations
                 .Find(location => location.Id == request.Id)
                 .FirstOrDefaultAsync(cancellationToken);
     }

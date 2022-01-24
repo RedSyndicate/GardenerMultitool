@@ -22,5 +22,7 @@ namespace GardenersMultitool.Domain.ValueObjects.Common
         }
 
         public override string ToString() => $"{MinimumpH} - {MaximumpH}";
+
+        public bool IsCompatible(pH soilPh) => MaximumpH > soilPh?.MaximumpH || soilPh?.MinimumpH < MinimumpH;
     }
 }

@@ -6,4 +6,5 @@
 <Navigation>
 	<slot id="main" />
 </Navigation>
+
 <slot />

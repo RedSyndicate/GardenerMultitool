@@ -8,10 +8,9 @@ using System.Linq;
 using AutoMapper;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
+using MongoDB.Driver;
 using PlantDataImporter.Extensions;
 using System.Text;
-using System.Collections;
-using GardenersMultitool.Domain.ValueObjects.Common;
 
 namespace PlantDataImporter
 {
@@ -24,25 +23,16 @@ namespace PlantDataImporter
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             var plants = new Loader().Run(args[0], directory);
-
-            PlantPropertyCSVParser(plants);
-
+            new MongoClient("mongodb://localhost")
+                .GetDatabase("gardeners-multitool")
+                .GetCollection<Plant>(nameof(Plant)
+                    .ToLowerInvariant())
+                .InsertManyAsync(plants);
+            Console.ReadLine();
         }
 
         private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)
         {
-            //This method returns to the console a list of all uniques values of a
-            //given label on the CSV files. See var attribute of FlatString() below.
-            //var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
-            //var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
-
-            //foreach (var property in plantPropertiesHashSet)
-            //{
-            //    Console.WriteLine(property);
-            //}
-
-            //Console.ReadLine();
-            //return plantPropertiesHashSet;
             var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
             var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
             var plantPropertyList = new List<string>();
@@ -58,23 +48,20 @@ namespace PlantDataImporter
                     continue;
                 }
             }
-
             Console.WriteLine(plantPropertyList.ToString());
-
             Console.ReadLine();
+
             return plantPropertiesHashSet;
-
-
         }
 
         static StringBuilder FlatString(StringBuilder sb, Plant plant)
         {
             //for soil pH:  ?? = if the value is null, create new object with -1, -1, else use value as-is
-            var soilPH = plant.SoilPH ?? new pH(-1, -1);
+            //var soilPH = plant.SoilPH ?? new pH(-1, -1);
             //for plant.Height: if value is null/empty, write "0", else write the attribute.
-            var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
+            //var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
 
-            var soilMoisture = plant.SoilMoisture;
+            var soilMoisture = plant.Name;
             
             //for List<IEnumerable> Types
             //attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
@@ -89,18 +76,28 @@ namespace PlantDataImporter
         private static MapperConfiguration Config => new(cfg =>
             cfg.CreateMap<PlantDto, Plant>()
                 .ForMember(dest => dest.PlantType, opt => opt.MapFrom(src =>
-                    src.PlantType.ToLowerInvariant().ToPlantType()))
+                    src.PlantType
+                        .ToLowerInvariant()
+                        .ToPlantType()))
                 .ForMember(dest => dest.SoilPH, opt => opt.MapFrom(src =>
-                    src.SoilPH.Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).TopH()))
+                    src.SoilPH
+                        .Split('-', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .TopH()))
                 .ForMember(dest => dest.EcologicalFunction, opt => opt.MapFrom(src =>
-                    src.EcologicalFunction.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                        .Select(Clean)
+                    src.EcologicalFunction
+                        .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Aggregate(new HashSet<IEcologicalFunction>(), AggregateEcologicalFunctions)))
                 .ForMember(dest => dest.HumanUse, opt => opt.MapFrom(src =>
-                    src.HumanUseCrop.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                    src.HumanUseCrop
+                        .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Where(FilterBullshit)
-                        .Select(Clean)
                         .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses)))
+                .ForMember(dest => dest.HardinessZone, opt => opt.MapFrom(src => 
+                    src.HardinessZone
+                        .Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s == "?" ? 0.ToString() : s)
+                        .ToArray()
+                        .ToHardinessZoneRange()))
         );
 
         public IEnumerable<Plant> Run(string path, string directory)
@@ -128,7 +125,6 @@ namespace PlantDataImporter
         private static readonly List<string> _nonoWords = new() { "wax", "resin", "or polish", "resin or polish", "spray" };
         private static bool FilterBullshit(string str) => !_nonoWords.Contains(str.ToLowerInvariant());
 
-        private static string Clean(string arg1) => arg1;
 
         private static HashSet<IEcologicalFunction> AggregateEcologicalFunctions(HashSet<IEcologicalFunction> accumulator, string function)
         {

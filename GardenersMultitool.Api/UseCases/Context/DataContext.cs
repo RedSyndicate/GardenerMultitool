@@ -9,6 +9,8 @@ namespace GardenersMultitool.Api.UseCases.Context
     {
         private readonly ICollectionProxy<Location> _locations;
         private readonly ICollectionProxy<Plant> _plants;
+        public IMongoCollection<Location> Locations => _locations.Collection;
+        public IMongoCollection<Plant> Plants => _plants.Collection;
 
         public DataContext(ICollectionProxy<Location> locations, ICollectionProxy<Plant> plants)
         {
@@ -18,8 +20,8 @@ namespace GardenersMultitool.Api.UseCases.Context
 
         public IMongoCollection<T> Collection<T>() where T : IAggregateRoot
         {
-            if (typeof(T) == typeof(Location)) return (IMongoCollection<T>) _locations.Collection;
-            if (typeof(T) == typeof(Plant)) return (IMongoCollection<T>) _plants.Collection;
+            if (typeof(T) == typeof(Location)) return (IMongoCollection<T>)_locations.Collection;
+            if (typeof(T) == typeof(Plant)) return (IMongoCollection<T>)_plants.Collection;
             throw new ArgumentException($"Type {typeof(T)} is not mapped to a collection.");
         }
     }
@@ -35,7 +37,7 @@ namespace GardenersMultitool.Api.UseCases.Context
         private IMongoCollection<T> _collection;
 
         public IMongoCollection<T> Collection => _collection ??= _database
-            .GetCollection<T>(nameof(T).ToLowerInvariant());
+            .GetCollection<T>(typeof(T).Name.ToLowerInvariant());
 
         protected CollectionProxy(IMongoDatabase database)
         {
@@ -45,11 +47,11 @@ namespace GardenersMultitool.Api.UseCases.Context
 
     public class LocationCollection : CollectionProxy<Location>
     {
-        public LocationCollection(IMongoDatabase database) : base(database) { } 
+        public LocationCollection(IMongoDatabase database) : base(database) { }
     }
     public class PlantCollection : CollectionProxy<Plant>
     {
-        public PlantCollection(IMongoDatabase database) : base(database) { } 
+        public PlantCollection(IMongoDatabase database) : base(database) { }
     }
 }
 

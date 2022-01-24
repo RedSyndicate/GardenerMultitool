@@ -1,8 +1,11 @@
+using System.Linq;
 using System.Reflection;
 using CsvHelper.Configuration;
+using GardenersMultitool.Api.CustomConfigurations;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
+using GardenersMultitool.Domain.ValueObjects.Common;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace GardenersMultitool.Api
@@ -35,18 +41,40 @@ namespace GardenersMultitool.Api
             .AddSingleton(config =>
             {
                 var settings = config.GetService<IOptions<DatabaseSettings>>()?.Value;
-                if (settings != null) return new MongoClient(settings.ConnectionString).GetDatabase(settings.Database);
+
+                if (settings != null)
+                    return new MongoClient(settings.ConnectionString).GetDatabase(settings.Database);
                 throw new ConfigurationException($"Uninitialized Database Settings");
             })
             .AddSingleton<ICollectionProxy<Plant>, PlantCollection>()
             .AddSingleton<ICollectionProxy<Location>, LocationCollection>()
             .AddSingleton<DataContext>()
             .AddSingleton<PlantService>()
-                //.AddPlantCache(_contentRoot) // Load files from api project directory
-                .AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
-                });
+            //.AddPlantCache(_contentRoot) // Load files from api project directory
+            .AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
+            });
+
+            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+
+            foreach (var t in types)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            BsonClassMap.RegisterClassMap<pH>(ph =>
+            {
+                ph.AutoMap();
+                ph.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
+            });
+
+            BsonClassMap.RegisterClassMap<Plant>(p =>
+            {
+                p.AutoMap();
+                p.MapCreator(p => new Plant());
+                p.MapProperty(p => p.SoilPH);
+            });
 
             services.AddControllers();
         }
