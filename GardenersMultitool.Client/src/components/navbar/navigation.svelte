@@ -38,16 +38,16 @@
 			transition:fly={{ x: -200, duration: 400, easing: backInOut }}
 			class="drawer-side hidden"
 		>
-			<label for="nav-drawer" class="drawer-overlay" />
-			<ul class="m-0 p-4 menu w-80 bg-base-100 h-screen">
+			<label for="nav-drawer" class="drawer-overlay opacity-50" />
+			<ul class="m-0 p-4 menu w-60 bg-base-100 h-screen">
 				<li>
-					<a href="/">Dashboard</a>
+					<a href="/" class="btn btn-block btn-ghost">Dashboard</a>
 				</li>
 				<li>
-					<a href="/plants">Plants</a>
+					<a href="/plants" class="btn btn-block btn-ghost">Plants</a>
 				</li>
 				<li>
-					<a href="/locations">Locations</a>
+					<a href="/locations" class="btn btn-block btn-ghost">Locations</a>
 				</li>
 			</ul>
 		</div>
