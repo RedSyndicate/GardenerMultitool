@@ -9,7 +9,6 @@ namespace GardenersMultitool.Domain.ValueObjects
 {
     public class Plant : IAggregateRoot
     {
-        [Ignore]
         [BsonId]
         public Guid Id { get; set; }
         public int PlantId { get; set; }
