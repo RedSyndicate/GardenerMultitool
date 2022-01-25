@@ -26,7 +26,14 @@ namespace ZipcodeDataImporter
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             
-            //var zipCodes = new Loader().Run(args[0], directory);
+            var zipCodesHardiness = new Loader().Run(args[0], directory);
+
+            new MongoClient("mongodb://localhost")
+                .GetDatabase("gardeners-multitool")
+                .GetCollection<ZipcodeHardiness>(nameof(ZipcodeHardiness)
+                    .ToLowerInvariant())
+                .InsertManyAsync(zipCodesHardiness);
+            Console.ReadLine();
             //Console.WriteLine("Wow you made it this far? That's nuts.");
             //Console.WriteLine(zipCodes.ToString());
             //Console.ReadLine();

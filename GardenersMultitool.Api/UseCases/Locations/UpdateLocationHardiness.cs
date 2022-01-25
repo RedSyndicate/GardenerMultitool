@@ -29,13 +29,13 @@ namespace GardenersMultitool.Api.UseCases.Locations
         {
             var location = Context.Locations.Find(location => location.Id == request.LocationId).FirstOrDefault();
             HardinessZone hardiness = HardinessFetchService(request.ZipCode);
-            location.UpdateHardiness(hardiness);
+            //location.UpdateHardiness(hardiness);
             throw new NotImplementedException();
         }
 
         private HardinessZone HardinessFetchService(int zipCode)
         {
-            int thing = Context.HardinessZipcodes.find(hardyzips => hardyzips.zipcode == zipCode).firstordefault()
+            int thing = Context.ZipcodeHardiness.find(hardyzips => hardyzips.zipcode == zipCode).firstordefault();
             return new HardinessZone(thing);
         }
     }

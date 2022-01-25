@@ -1,10 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
+using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 
 namespace GardenersMultitool.Domain.Helpers
 {
-    public class ZipcodeHardiness : ValueObject
+    public class ZipcodeHardiness : IAggregateRoot
     {
         public ZipcodeHardiness(HardinessZone hardinessZone, Zipcode zipcode, string temperatureRange, string zoneTitle)
         {
@@ -13,18 +15,13 @@ namespace GardenersMultitool.Domain.Helpers
             TemperatureRange = temperatureRange;
             ZoneTitle = zoneTitle;
         }
+        public ZipcodeHardiness() { }
 
-        public HardinessZone HardinessZone { get; }
-        public Zipcode Zipcode { get; }
-        public string TemperatureRange { get; }
-        public string ZoneTitle { get; }
+        public HardinessZone HardinessZone { get; set; }
+        public Zipcode Zipcode { get; set; }
+        public string TemperatureRange { get; set; }
+        public string ZoneTitle { get; set; }
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return HardinessZone;
-            yield return Zipcode;
-            yield return TemperatureRange;
-            yield return ZoneTitle;
-        }
+        public Guid Id { get; set; }
     }
 }
