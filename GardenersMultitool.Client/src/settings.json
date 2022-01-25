@@ -1,3 +1,3 @@
 {
-    "environment":"test"
+    "ApiUrl": "http://localhost:5000"
 }
