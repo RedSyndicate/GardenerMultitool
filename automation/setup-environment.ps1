@@ -31,6 +31,7 @@ cinst dotnet-6.0-runtime
 cinst dotnet-6.0-sdk
 cinst vscode
 cinst docker
+cinst docker-desktop
 cinst mongodb
 cinst mongodb-compass
 $nodejsSearch = ( -split (choco find nodejs-lts) )[2]
