@@ -8,15 +8,16 @@ using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.Services;
 using GardenersMultitool.Domain.ValueObjects;
 using MediatR;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases.Locations
 {
     public class RecommendByLocation : IRequest<IEnumerable<Plant>>
     {
-        public Guid LocationId { get; }
+        public string LocationId { get; }
 
-        public RecommendByLocation(Guid locationId)
+        public RecommendByLocation(string locationId)
         {
             LocationId = locationId;
         }

@@ -11,6 +11,7 @@ using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 
 namespace GardenersMultitool.Api.Controllers
 {
@@ -27,22 +28,22 @@ namespace GardenersMultitool.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("by_id")]
-        public async Task<Location> GetLocation(Guid id) => await _mediator.Send(new GetLocationById(id));
+        [HttpGet("{locationId}")]
+        public async Task<Location> GetLocation(string locationId) => await _mediator.Send(new GetLocationById(locationId));
 
         [HttpGet]
         public async Task<IEnumerable<Location>> GetLocation() => await _mediator.Send(new GetAllLocations());
 
         [HttpPost]
-        public async Task<Guid> CreateLocation([FromBody] CreateNewLocation request) =>
+        public async Task<string> CreateLocation([FromBody] CreateNewLocation request) =>
             await _mediator.Send(request, CancellationToken.None);
 
-        [HttpPut("add_plants")]
-        public async Task<Location> AddPlants(List<Guid> plantIds, Guid locationId) =>
+        [HttpPut("{locationId}/add_plants")]
+        public async Task<Location> AddPlants(string locationId, [FromBody] List<string> plantIds) =>
             await _mediator.Send(new AddPlantsToLocation(plantIds, locationId), CancellationToken.None);
 
         [HttpGet("recommendations")]
-        public async Task<IEnumerable<Plant>> Recommendations(Guid locationId) => await _mediator.Send(new RecommendByLocation(locationId));
+        public async Task<IEnumerable<Plant>> Recommendations(string locationId) => await _mediator.Send(new RecommendByLocation(locationId));
     }
 
 }

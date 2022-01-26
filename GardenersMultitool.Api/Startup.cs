@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using CsvHelper.Configuration;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
@@ -55,8 +57,15 @@ namespace GardenersMultitool.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
             });
 
-            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-            BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
+            InitializeMongoDBMappings();
+
+
+            services.AddControllers();
+        }
+
+        private void InitializeMongoDBMappings()
+        {
+            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
 
             var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
 
@@ -74,10 +83,17 @@ namespace GardenersMultitool.Api
             BsonClassMap.RegisterClassMap<Plant>(map =>
             {
                 map.AutoMap();
-                map.MapProperty(p => p.Id).SetSerializer(new GuidSerializer(BsonType.String));
+                map.MapIdProperty(p => p.Id)
+                .SetIdGenerator(StringObjectIdGenerator.Instance);
             });
 
-            services.AddControllers();
+            BsonClassMap.RegisterClassMap<Location>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(l => l.Id)
+                .SetIdGenerator(StringObjectIdGenerator.Instance)
+                .SetElementName("_id");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

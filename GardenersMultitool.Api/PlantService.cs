@@ -24,7 +24,7 @@ namespace GardenersMultitool.Api
         public async Task<List<Plant>> GetAsync() =>
         await _collection.Find(_ => true).ToListAsync();
 
-        public async Task<Plant?> GetAsync(int id) =>
+        public async Task<Plant> GetAsync(int id) =>
             await _collection.Find(x => x.PlantId == id).FirstOrDefaultAsync();
 
         public async Task CreateAsync(Plant newBook) =>
