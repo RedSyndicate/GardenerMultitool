@@ -4,13 +4,15 @@ using CsvHelper.Configuration.Attributes;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects.Common;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace GardenersMultitool.Domain.ValueObjects
 {
     public class Plant : IAggregateRoot
     {
         [Ignore]
-        public Guid Id { get; set; }
+        [BsonId]
+        public string Id { get; set; }
         public int PlantId { get; set; }
         public Name Name { get; set; }
         public Name ScientificName { get; set; }

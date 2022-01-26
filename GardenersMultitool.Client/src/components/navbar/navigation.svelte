@@ -35,7 +35,7 @@
 	{#if visible}
 		<div
 			id="nav-menu"
-			transition:fly={{ x: -200, duration: 400, easing: backInOut }}
+			transition:fly={{ x: -200, duration: 300, easing: backInOut }}
 			class="drawer-side hidden"
 		>
 			<label for="nav-drawer" class="drawer-overlay" />

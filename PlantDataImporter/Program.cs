@@ -14,6 +14,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using PlantDataImporter.Extensions;
 using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace PlantDataImporter
 {
@@ -27,16 +28,15 @@ namespace PlantDataImporter
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             var plants = (new Loader().Run(args[0], directory)).ToList();
 
-            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
+
             BsonClassMap.RegisterClassMap<Plant>(map =>
             {
                 map.AutoMap();
-                map.MapProperty(p => p.Id).SetSerializer(new GuidSerializer(BsonType.String));
+                map.MapIdProperty(p => p.Id)
+                .SetIdGenerator(StringObjectIdGenerator.Instance)
+                .SetSerializer(new StringSerializer(BsonType.ObjectId));
             });
-            foreach (var plant in plants)
-            {
-                plant.Id = Guid.NewGuid();
-            }
 
             new MongoClient("mongodb://localhost")
                 .GetDatabase("gardeners-multitool")
