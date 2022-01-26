@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
-namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.PestManagement
+namespace GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Nurse.PestManagement
 {
     public class PestManagements : IEcologicalFunctionFactory
     {

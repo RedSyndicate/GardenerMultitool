@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 
 // ReSharper disable InconsistentNaming
 
-namespace GardenersMultitool.Domain.ValueObjects.Common
+namespace GardenersMultitool.Domain.Helpers
 {
     public class pH : ValueObject
     {

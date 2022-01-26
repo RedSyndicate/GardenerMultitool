@@ -23,8 +23,12 @@ Write-Host "Upgrading Chocolatey ..."
 choco upgrade chocolatey
 
 Write-Host "Installing Development Tools ..."
+cinst git
 cinst visualstudio2022community
 cinst visualstudio2022buildtools
+cinst dotnet-6.0-aspnetruntime
+cinst dotnet-6.0-runtime
+cinst dotnet-6.0-sdk
 cinst vscode
 cinst docker
 cinst mongodb

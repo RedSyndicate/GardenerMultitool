@@ -5,6 +5,6 @@ namespace GardenersMultitool.Domain.Entities
 {
     public interface IAggregateRoot
     {
-        string Id { get; }
+        Guid Id { get; }
     }
 }

@@ -1,8 +1,8 @@
-using GardenersMultitool.Domain.ValueObjects.Common;
+using GardenersMultitool.Domain.Helpers;
 using Shouldly;
 using Xunit;
 
-namespace GardenersMultitool.Domain.Tests
+namespace GardenersMultitool.Domain.Tests.Common
 {
     public class TemperatureTests
     {

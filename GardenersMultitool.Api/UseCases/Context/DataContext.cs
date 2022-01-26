@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Linq;
 using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases.Context
@@ -16,6 +22,42 @@ namespace GardenersMultitool.Api.UseCases.Context
         {
             _locations = locations;
             _plants = plants;
+
+            InitializeMappings();
+        }
+
+        private void InitializeMappings()
+        {
+            BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+
+            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+
+            foreach (var t in types)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            BsonClassMap.RegisterClassMap<pH>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
+            });
+
+            BsonClassMap.RegisterClassMap<Plant>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(p => p.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
+
+            BsonClassMap.RegisterClassMap<Location>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(l => l.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
         }
 
         public IMongoCollection<T> Collection<T>() where T : IAggregateRoot
