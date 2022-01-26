@@ -30,6 +30,7 @@ cinst dotnet-6.0-aspnetruntime
 cinst dotnet-6.0-runtime
 cinst dotnet-6.0-sdk
 cinst vscode
+cinst wsl2
 cinst docker
 cinst docker-desktop
 cinst mongodb
