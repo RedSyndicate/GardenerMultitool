@@ -23,17 +23,17 @@ Write-Host "Upgrading Chocolatey ..."
 choco upgrade chocolatey
 
 Write-Host "Installing Development Tools ..."
-choco install visualstudio2022community
-choco install visualstudio2022buildtools
-choco install vscode
-choco install docker
-choco install mongodb
-choco install mongodb-compass
+cinst visualstudio2022community
+cinst visualstudio2022buildtools
+cinst vscode
+cinst docker
+cinst mongodb
+cinst mongodb-compass
 $nodejsSearch = ( -split (choco find nodejs-lts) )[2]
 if ($nodejsSearch -eq 0) {
-    choco install nodejs-lts
+    cinst nodejs-lts
 }
-choco install typescript
-choco install cypress
-choco install NSwagStudio
-choco install resharper
+cinst typescript
+cinst cypress
+cinst NSwagStudio
+cinst resharper
