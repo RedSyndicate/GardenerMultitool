@@ -1,5 +1,6 @@
 ﻿using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.ValueObjects;
+using GardenersMultitool.Domain.ValueObjects.HabitationZone;
 using MediatR;
 using MongoDB.Driver;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GardenersMultitool.Api.UseCases.Locations
 {
-    public class UpdateLocationHardiness :IRequest<Guid>
+    public class UpdateLocationHardiness : IRequest<Guid>
     {
         public Guid LocationId { get; set; }
         public int ZipCode { get; set; }
@@ -35,8 +36,8 @@ namespace GardenersMultitool.Api.UseCases.Locations
 
         private HardinessZone HardinessFetchService(int zipCode)
         {
-            int thing = Context.ZipcodeHardiness.find(hardyzips => hardyzips.zipcode == zipCode).firstordefault();
-            return new HardinessZone(thing);
+            var thing = Context.ZipcodeHardiness.Find(hardyzips => hardyzips.Zipcode.Value == zipCode.ToString()).FirstOrDefault();
+            return new HardinessZone(thing.HardinessZone.Zone);
         }
     }
 }

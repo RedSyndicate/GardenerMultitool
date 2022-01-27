@@ -10,11 +10,11 @@ namespace GardenersMultitool.Api.UseCases.Plants
 {
     public class GetPlantById : IRequest<Plant>
     {
-        public int Id { get; }
+        public int PlantId { get; }
 
         public GetPlantById(int id)
         {
-            Id = id;
+            PlantId = id;
         }
     }
 
@@ -26,7 +26,7 @@ namespace GardenersMultitool.Api.UseCases.Plants
 
         public override async Task<Plant> Handle(GetPlantById request, CancellationToken cancellationToken) =>
             await Context.Plants
-                .Find(plant => plant.PlantId == request.Id)
+                .Find(plant => plant.PlantId == request.PlantId)
                 .FirstOrDefaultAsync(cancellationToken);
     }
 }
