@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects;
-using GardenersMultitool.Domain.ValueObjects.HabitationZone;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
 using MongoDB.Bson.Serialization.Attributes;
 

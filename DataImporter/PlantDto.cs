@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
-namespace PlantDataImporter
+namespace DataImporter
 {
     public class PlantDto
     {

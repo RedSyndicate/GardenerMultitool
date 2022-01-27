@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
-namespace ZipcodeDataImporter
+namespace DataImporter
 {
     public class ZipcodeHardinessDto
     {

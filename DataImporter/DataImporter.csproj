@@ -7,8 +7,11 @@
 
   <ItemGroup>
     <Compile Remove="Permaculture_Plant_CSVs\**" />
+    <Compile Remove="Zipcode_Hardiness_CSVs\**" />
     <EmbeddedResource Remove="Permaculture_Plant_CSVs\**" />
+    <EmbeddedResource Remove="Zipcode_Hardiness_CSVs\**" />
     <None Remove="Permaculture_Plant_CSVs\**" />
+    <None Remove="Zipcode_Hardiness_CSVs\**" />
   </ItemGroup>
 
   <ItemGroup>

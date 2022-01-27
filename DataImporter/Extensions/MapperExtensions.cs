@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
-using CSharpFunctionalExtensions;
 using GardenersMultitool.Domain.Helpers;
-using GardenersMultitool.Domain.ValueObjects;
-using GardenersMultitool.Domain.ValueObjects.HabitationZone;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
 
-namespace PlantDataImporter.Extensions
+namespace DataImporter.Extensions
 {
     public static class MapperExtensions
     {

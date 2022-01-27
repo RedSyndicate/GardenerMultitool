@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GardenersMultitool.Domain\GardenersMultitool.Domain.csproj" />
-    <ProjectReference Include="..\PlantDataImporter\PlantDataImporter.csproj" />
+    <ProjectReference Include="..\PlantDataImporter\DataImporter.csproj" />
   </ItemGroup>
 
 </Project>

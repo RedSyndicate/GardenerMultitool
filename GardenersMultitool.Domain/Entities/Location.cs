@@ -5,7 +5,6 @@ using CSharpFunctionalExtensions;
 using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions.Wildlife;
-using GardenersMultitool.Domain.ValueObjects.HabitationZone;
 using GardenersMultitool.Domain.ValueObjects.PlantCharacteristics.SunRequirements;
 using MongoDB.Bson;
 

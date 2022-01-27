@@ -1,11 +1,11 @@
 ﻿using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.ValueObjects;
-using GardenersMultitool.Domain.ValueObjects.HabitationZone;
 using MediatR;
 using MongoDB.Driver;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GardenersMultitool.Domain.Helpers;
 
 namespace GardenersMultitool.Api.UseCases.Locations
 {

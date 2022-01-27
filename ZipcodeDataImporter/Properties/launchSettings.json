@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ZipcodeDataImporter": {
-      "commandName": "Project",
-      "commandLineArgs": "\"ZipcodeCSV\""
-    }
-  }
-}

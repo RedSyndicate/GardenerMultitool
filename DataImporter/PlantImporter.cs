@@ -1,35 +1,35 @@
-﻿using CsvHelper;
-using GardenersMultitool.Domain.ValueObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using AutoMapper;
+using CsvHelper;
+using DataImporter.Extensions;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.Helpers;
+using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using PlantDataImporter.Extensions;
-using System.Text;
 using Newtonsoft.Json;
-using MongoDB.Bson.Serialization.IdGenerators;
 
-namespace PlantDataImporter
+namespace DataImporter
 {
-    class Program
+    public class PlantImporter
     {
-        static void Main(string[] args)
+        public static void Run(string folderPath)
         {
-            if (args.Length < 1)
+            if (string.IsNullOrEmpty(folderPath))
                 return;
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-            var plants = (new Loader().Run(args[0], directory)).ToList();
+            var plants = (new PlantLoader().Run(folderPath, directory)).ToList();
 
             InitializeMappings();
 
@@ -126,7 +126,7 @@ namespace PlantDataImporter
         }
     }
 
-    public class Loader
+    public class PlantLoader
     {
         private static MapperConfiguration Config => new(cfg =>
             cfg.CreateMap<PlantDto, Plant>()
