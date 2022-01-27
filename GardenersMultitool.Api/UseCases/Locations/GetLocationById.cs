@@ -11,9 +11,9 @@ namespace GardenersMultitool.Api.UseCases.Locations
 {
     public class GetLocationById : IRequest<Location>
     {
-        public string Id { get; }
+        public Guid Id { get; }
 
-        public GetLocationById(string id)
+        public GetLocationById(Guid id)
         {
             Id = id;
         }

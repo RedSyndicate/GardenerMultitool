@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
-namespace GardenersMultitool.Domain.ValueObjects
+namespace GardenersMultitool.Domain.ValueObjects.HabitationZone
 {
     public class HardinessZone : ValueObject
     {

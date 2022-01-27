@@ -13,16 +13,16 @@ namespace GardenersMultitool.Api.UseCases.Locations
 {
     public class AddPlantsToLocation : IRequest<Location>
     {
-        public List<string> PlantIds { get; }
-        public string LocationId { get; }
+        public List<Guid> PlantIds { get; }
+        public Guid LocationId { get; }
 
-        public AddPlantsToLocation(List<string> plantIds, string locationId)
+        public AddPlantsToLocation(List<Guid> plantIds, Guid locationId)
         {
             PlantIds = plantIds;
             LocationId = locationId;
         }
 
-        public void Deconstruct(out List<string> plantIds, out string locationId)
+        public void Deconstruct(out List<Guid> plantIds, out Guid locationId)
         {
             plantIds = PlantIds;
             locationId = LocationId;
@@ -35,7 +35,7 @@ namespace GardenersMultitool.Api.UseCases.Locations
         {
             var (plantIds, locationId) = request;
             var location = await Context.Locations.Find(location => location.Id == locationId).FirstOrDefaultAsync(cancellationToken);
-            var plants = await Context.Plants.Find(plant => plantIds.Contains(plant.Id)).ToListAsync();
+            var plants = await Context.Plants.Find(plant => plantIds.Contains(plant.Id)).ToListAsync(cancellationToken);
             plants.ForEach(plant => location.AddPlant(plant));
             var updateDef = Builders<Location>.Update
                 .Set(l => l.Plants, location.Plants);

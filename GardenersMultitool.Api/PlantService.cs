@@ -1,11 +1,11 @@
 ﻿using GardenersMultitool.Domain.ValueObjects;
-using GardenersMultitool.Domain.ValueObjects.Common;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GardenersMultitool.Domain.Entities;
 
 namespace GardenersMultitool.Api
 {

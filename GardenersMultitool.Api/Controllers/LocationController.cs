@@ -28,25 +28,25 @@ namespace GardenersMultitool.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{locationId}")]
-        public async Task<Location> GetLocation(string locationId) => await _mediator.Send(new GetLocationById(locationId));
+        [HttpGet("{locationId:guid}")]
+        public async Task<Location> GetLocation(Guid locationId) => await _mediator.Send(new GetLocationById(locationId));
 
         [HttpGet]
-        public async Task<IEnumerable<Location>> GetLocation() => await _mediator.Send(new GetAllLocations());
+        public async Task<IEnumerable<Location>> GetLocations() => await _mediator.Send(new GetAllLocations());
 
         [HttpPost]
-        public async Task<string> CreateLocation([FromBody] CreateNewLocation request) =>
+        public async Task<Guid> CreateLocation([FromBody] CreateNewLocation request) =>
             await _mediator.Send(request, CancellationToken.None);
 
-        [HttpPut("{locationId}/add_plants")]
-        public async Task<Location> AddPlants(string locationId, [FromBody] List<string> plantIds) =>
+        [HttpPut("{locationId:guid}/add_plants")]
+        public async Task<Location> AddPlants(Guid locationId, [FromBody] List<Guid> plantIds) =>
             await _mediator.Send(new AddPlantsToLocation(plantIds, locationId), CancellationToken.None);
-
-        [HttpGet("recommendations")]
-        public async Task<IEnumerable<Plant>> Recommendations(Guid locationId) => await _mediator.Send(new RecommendByLocation(locationId));
 
         [HttpPost("hardiness_zone")]
         public async Task<Guid> FetchAndUpdateHardinessZone(UpdateLocationHardiness request) => await _mediator.Send(request);
+
+        [HttpGet("{locationId:guid}/recommendations")]
+        public async Task<IEnumerable<Plant>> Recommendations(Guid locationId) => await _mediator.Send(new RecommendByLocation(locationId));
     }
 
 }

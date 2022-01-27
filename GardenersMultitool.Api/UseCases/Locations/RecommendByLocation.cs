@@ -15,9 +15,9 @@ namespace GardenersMultitool.Api.UseCases.Locations
 {
     public class RecommendByLocation : IRequest<IEnumerable<Plant>>
     {
-        public string LocationId { get; }
+        public Guid LocationId { get; }
 
-        public RecommendByLocation(string locationId)
+        public RecommendByLocation(Guid locationId)
         {
             LocationId = locationId;
         }

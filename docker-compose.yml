@@ -29,5 +29,5 @@ services:
       - 27018:27017
     volumes:
       - ~/docker/volumes/mongodb:/data/db
-      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./automation/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ../plant.json:/docker-entrypoint-initdb.d/plant.json:ro

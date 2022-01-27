@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using GardenersMultitool.Domain.Entities;
-using GardenersMultitool.Domain.ValueObjects.Common;
+using GardenersMultitool.Domain.Helpers;
+using GardenersMultitool.Domain.ValueObjects;
+using GardenersMultitool.Domain.ValueObjects.HabitationZone;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace GardenersMultitool.Domain.ValueObjects
+namespace GardenersMultitool.Domain.Entities
 {
     public class Plant : IAggregateRoot
     {
         [BsonId]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public int PlantId { get; set; }
         public Name Name { get; set; }
         public Name ScientificName { get; set; }

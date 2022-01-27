@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\api-ci.yml = .github\workflows\api-ci.yml
 		.github\workflows\client-ci.yml = .github\workflows\client-ci.yml
+		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZipcodeDataImporter", "ZipcodeDataImporter\ZipcodeDataImporter.csproj", "{B0DD8EF3-0617-4BC5-AEF3-45BB499075D9}"

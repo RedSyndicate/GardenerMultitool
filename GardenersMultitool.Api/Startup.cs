@@ -4,8 +4,8 @@ using System.Reflection;
 using CsvHelper.Configuration;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects;
-using GardenersMultitool.Domain.ValueObjects.Common;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,43 +57,7 @@ namespace GardenersMultitool.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
             });
 
-            InitializeMongoDBMappings();
-
-
             services.AddControllers();
-        }
-
-        private void InitializeMongoDBMappings()
-        {
-            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
-
-            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
-
-            foreach (var t in types)
-            {
-                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
-            }
-
-            BsonClassMap.RegisterClassMap<pH>(ph =>
-            {
-                ph.AutoMap();
-                ph.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
-            });
-
-            BsonClassMap.RegisterClassMap<Plant>(map =>
-            {
-                map.AutoMap();
-                map.MapIdProperty(p => p.Id)
-                .SetIdGenerator(StringObjectIdGenerator.Instance);
-            });
-
-            BsonClassMap.RegisterClassMap<Location>(map =>
-            {
-                map.AutoMap();
-                map.MapIdProperty(l => l.Id)
-                .SetIdGenerator(StringObjectIdGenerator.Instance)
-                .SetElementName("_id");
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

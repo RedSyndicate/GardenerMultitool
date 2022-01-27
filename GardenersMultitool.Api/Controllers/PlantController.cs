@@ -5,8 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using GardenersMultitool.Domain.ValueObjects;
-using GardenersMultitool.Domain.ValueObjects.Common;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
+using MediatR;
+using GardenersMultitool.Api.UseCases.Plants;
+using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Helpers;
 
 namespace GardenersMultitool.Api.Controllers
 {
@@ -15,114 +18,115 @@ namespace GardenersMultitool.Api.Controllers
     public class PlantController : ControllerBase
     {
         private readonly ILogger<PlantController> _logger;
-        private readonly PlantService _plantService;
+        private readonly IMediator _mediator;
 
-        public PlantController(ILogger<PlantController> logger, PlantService dataService)
+
+        public PlantController(ILogger<PlantController> logger, IMediator mediator)
         {
             _logger = logger;
-            _plantService = dataService;
+            _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<Plant> GetById(int id)
-        {
-            return (await _plantService.GetAsync(id));
-        }
+        [HttpGet("{plantId:int}")]
+        public async Task<Plant> GetPlantById(int plantId) => await _mediator.Send(new GetPlantById(plantId));
 
-        [HttpGet("annuals")]
-        public async Task<IEnumerable<Plant>> GetAnnuals()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Annual);
-        }
+        [HttpGet()]
+        public async Task<IEnumerable<Plant>> GetPlants() => await _mediator.Send(new GetAllPlants());
 
-        [HttpGet("aquatic")]
-        public async Task<IEnumerable<Plant>> GetAquatic()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Aquatic);
-        }
+        //[HttpGet("annuals")]
+        //public async Task<IEnumerable<Plant>> GetAnnuals() => await _mediator.Send(new GetPlant)
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Annual);
+        //}
 
-        [HttpGet("biennial")]
-        public async Task<IEnumerable<Plant>> GetBiennial()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Biennial);
-        }
+        //[HttpGet("aquatic")]
+        //public async Task<IEnumerable<Plant>> GetAquatic()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Aquatic);
+        //}
 
-        [HttpGet("deciduous_shrub")]
-        public async Task<IEnumerable<Plant>> GetDeciduousShrub()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is DeciduousShrub);
-        }
+        //[HttpGet("biennial")]
+        //public async Task<IEnumerable<Plant>> GetBiennial()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Biennial);
+        //}
 
-        [HttpGet("deciduous_tree")]
-        public async Task<IEnumerable<Plant>> GetDeciduousTree()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is DeciduousTree);
-        }
+        //[HttpGet("deciduous_shrub")]
+        //public async Task<IEnumerable<Plant>> GetDeciduousShrub()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is DeciduousShrub);
+        //}
 
-        [HttpGet("evergreen_shrub")]
-        public async Task<IEnumerable<Plant>> GetEvergreenShrub()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is EvergreenShrub);
-        }
+        //[HttpGet("deciduous_tree")]
+        //public async Task<IEnumerable<Plant>> GetDeciduousTree()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is DeciduousTree);
+        //}
 
-        [HttpGet("evergreen_tree")]
-        public async Task<IEnumerable<Plant>> GetEvergreenTree()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is EvergreenTree);
-        }
+        //[HttpGet("evergreen_shrub")]
+        //public async Task<IEnumerable<Plant>> GetEvergreenShrub()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is EvergreenShrub);
+        //}
 
-        [HttpGet("fern")]
-        public async Task<IEnumerable<Plant>> GetFern()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Fern);
-        }
-            
-        [HttpGet("grass")]
-        public async Task<IEnumerable<Plant>> GetGrass()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Grass);
-        }
+        //[HttpGet("evergreen_tree")]
+        //public async Task<IEnumerable<Plant>> GetEvergreenTree()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is EvergreenTree);
+        //}
 
-        [HttpGet("mosses")]
-        public async Task<IEnumerable<Plant>> GetMosses()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Mosses);
-        }
+        //[HttpGet("fern")]
+        //public async Task<IEnumerable<Plant>> GetFern()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Fern);
+        //}
 
-        [HttpGet("perennial")]
-        public async Task<IEnumerable<Plant>> GetPerennial()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Perennial);
-        }
+        //[HttpGet("grass")]
+        //public async Task<IEnumerable<Plant>> GetGrass()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Grass);
+        //}
 
-        [HttpGet("vine")]
-        public async Task<IEnumerable<Plant>> GetVine()
-        {
-            return (await _plantService.GetAsync())
-                .Where(plant => plant.SoilPH != Maybe<pH>.None)
-                .Where(plant => plant.PlantType is Vine);
-        }
+        //[HttpGet("mosses")]
+        //public async Task<IEnumerable<Plant>> GetMosses()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Mosses);
+        //}
+
+        //[HttpGet("perennial")]
+        //public async Task<IEnumerable<Plant>> GetPerennial()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Perennial);
+        //}
+
+        //[HttpGet("vine")]
+        //public async Task<IEnumerable<Plant>> GetVine()
+        //{
+        //    return (await _plantService.GetAsync())
+        //        .Where(plant => plant.SoilPH != Maybe<pH>.None)
+        //        .Where(plant => plant.PlantType is Vine);
+        //}
     }
 }

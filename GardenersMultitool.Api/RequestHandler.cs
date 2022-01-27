@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using GardenersMultitool.Api.UseCases.Context;
 using MediatR;
 
-namespace GardenersMultitool.Api.UseCases.Locations
+namespace GardenersMultitool.Api
 {
     public abstract class RequestHandler<TRequest, TResult> : IRequestHandler<TRequest, TResult> where TRequest : IRequest<TResult>
     {

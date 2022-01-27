@@ -6,6 +6,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using AutoMapper;
+using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using MongoDB.Bson;
@@ -29,23 +31,24 @@ namespace PlantDataImporter
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             var plants = (new Loader().Run(args[0], directory)).ToList();
 
-            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
+            InitializeMappings();
 
-            BsonClassMap.RegisterClassMap<Plant>(map =>
+            foreach (var plant in plants)
             {
-                map.AutoMap();
-                map.MapIdProperty(p => p.Id)
-                .SetIdGenerator(StringObjectIdGenerator.Instance)
-                .SetSerializer(new StringSerializer(BsonType.ObjectId));
-            });
+                plant.Id = Guid.NewGuid();
+            }
 
-            new MongoClient("mongodb://localhost")
+            var collection = new MongoClient("mongodb://localhost")
                 .GetDatabase("gardeners-multitool")
                 .GetCollection<Plant>(nameof(Plant)
-                    .ToLowerInvariant())
-                .InsertManyAsync(plants);
+                    .ToLowerInvariant());
 
-            File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plants));
+            collection
+            .InsertManyAsync(plants);
+
+            var plantsfound = collection.Find(p => true).ToList();
+
+            File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plantsfound));
             Console.ReadLine();
         }
 
@@ -88,7 +91,41 @@ namespace PlantDataImporter
 
             return sb.Append(soilMoisture.ToString());
         }
+
+        private static void InitializeMappings()
+        {
+            BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+
+            foreach (var t in types)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            BsonClassMap.RegisterClassMap<pH>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
+            });
+
+            BsonClassMap.RegisterClassMap<Plant>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(p => p.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
+
+            BsonClassMap.RegisterClassMap<Location>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(l => l.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
+        }
     }
+
     public class Loader
     {
         private static MapperConfiguration Config => new(cfg =>
