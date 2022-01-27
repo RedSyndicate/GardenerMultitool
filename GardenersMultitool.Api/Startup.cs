@@ -1,7 +1,7 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using CsvHelper.Configuration;
-using GardenersMultitool.Api.CustomConfigurations;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
@@ -56,6 +57,16 @@ namespace GardenersMultitool.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
             });
 
+            InitializeMongoDBMappings();
+
+
+            services.AddControllers();
+        }
+
+        private void InitializeMongoDBMappings()
+        {
+            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
+
             var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
 
             foreach (var t in types)
@@ -69,20 +80,26 @@ namespace GardenersMultitool.Api
                 ph.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
             });
 
-            BsonClassMap.RegisterClassMap<Plant>(p =>
+            BsonClassMap.RegisterClassMap<Plant>(map =>
             {
-                p.AutoMap();
-                p.MapCreator(p => new Plant());
-                p.MapProperty(p => p.SoilPH);
+                map.AutoMap();
+                map.MapIdProperty(p => p.Id)
+                .SetIdGenerator(StringObjectIdGenerator.Instance);
             });
 
-            services.AddControllers();
+            BsonClassMap.RegisterClassMap<Location>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(l => l.Id)
+                .SetIdGenerator(StringObjectIdGenerator.Instance)
+                .SetElementName("_id");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Docker"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(options =>

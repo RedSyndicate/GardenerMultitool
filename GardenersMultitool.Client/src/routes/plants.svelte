@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { each } from 'svelte/internal';
-	import { annuals } from '../stores/plant';
+	import { annuals } from '../lib/plant';
 	import Plant from '../components/plant.svelte';
 </script>
 

@@ -8,9 +8,14 @@ using System.Linq;
 using AutoMapper;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using PlantDataImporter.Extensions;
 using System.Text;
+using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace PlantDataImporter
 {
@@ -22,12 +27,25 @@ namespace PlantDataImporter
                 return;
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-            var plants = new Loader().Run(args[0], directory);
+            var plants = (new Loader().Run(args[0], directory)).ToList();
+
+            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
+
+            BsonClassMap.RegisterClassMap<Plant>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(p => p.Id)
+                .SetIdGenerator(StringObjectIdGenerator.Instance)
+                .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            });
+
             new MongoClient("mongodb://localhost")
                 .GetDatabase("gardeners-multitool")
                 .GetCollection<Plant>(nameof(Plant)
                     .ToLowerInvariant())
                 .InsertManyAsync(plants);
+
+            File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plants));
             Console.ReadLine();
         }
 
@@ -36,7 +54,7 @@ namespace PlantDataImporter
             var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
             var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
             var plantPropertyList = new List<string>();
-            
+
             foreach (var property in plantPropertiesHashSet)
             {
                 if (!plantPropertyList.Contains(property))
@@ -62,12 +80,12 @@ namespace PlantDataImporter
             //var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
 
             var soilMoisture = plant.Name;
-            
+
             //for List<IEnumerable> Types
             //attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
             //return sb;
             //^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            
+
             return sb.Append(soilMoisture.ToString());
         }
     }
@@ -92,7 +110,7 @@ namespace PlantDataImporter
                         .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Where(FilterBullshit)
                         .Aggregate(new HashSet<IHumanUse>(), AggregateHumanUses)))
-                .ForMember(dest => dest.HardinessZone, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.HardinessZone, opt => opt.MapFrom(src =>
                     src.HardinessZone
                         .Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Select(s => s == "?" ? 0.ToString() : s)

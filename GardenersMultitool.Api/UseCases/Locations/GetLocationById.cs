@@ -4,15 +4,16 @@ using System.Threading.Tasks;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using MediatR;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases.Locations
 {
     public class GetLocationById : IRequest<Location>
     {
-        public Guid Id { get; }
+        public string Id { get; }
 
-        public GetLocationById(Guid id)
+        public GetLocationById(string id)
         {
             Id = id;
         }

@@ -6,22 +6,23 @@ using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.ValueObjects;
 using MediatR;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases.Locations
 {
     public class AddPlantsToLocation : IRequest<Location>
     {
-        public List<Guid> PlantIds { get; }
-        public Guid LocationId { get; }
+        public List<string> PlantIds { get; }
+        public string LocationId { get; }
 
-        public AddPlantsToLocation(List<Guid> plantIds, Guid locationId)
+        public AddPlantsToLocation(List<string> plantIds, string locationId)
         {
             PlantIds = plantIds;
             LocationId = locationId;
         }
 
-        public void Deconstruct(out List<Guid> plantIds, out Guid locationId)
+        public void Deconstruct(out List<string> plantIds, out string locationId)
         {
             plantIds = PlantIds;
             locationId = LocationId;

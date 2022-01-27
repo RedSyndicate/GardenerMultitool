@@ -10,7 +10,7 @@ namespace GardenersMultitool.Domain.ValueObjects
     public class Plant : IAggregateRoot
     {
         [BsonId]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public int PlantId { get; set; }
         public Name Name { get; set; }
         public Name ScientificName { get; set; }
