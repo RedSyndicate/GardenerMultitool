@@ -16,7 +16,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GardenersMultitool.Domain\GardenersMultitool.Domain.csproj" />
-    <ProjectReference Include="..\PlantDataImporter\DataImporter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CustomConfigurations\" />
   </ItemGroup>
 
 </Project>

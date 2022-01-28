@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,11 @@ namespace GardenersMultitool.Api.Controllers
         [HttpGet("{plantId:int}")]
         public async Task<Plant> GetPlantById(int plantId) => await _mediator.Send(new GetPlantById(plantId));
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<IEnumerable<Plant>> GetPlants() => await _mediator.Send(new GetAllPlants());
 
+        [HttpGet("{plantType}")]
+        public async Task<IEnumerable<Plant>> GetPlantsByPlantType(string plantType) => await _mediator.Send(new GetPlantsByPlantType(plantType));
         //[HttpGet("annuals")]
         //public async Task<IEnumerable<Plant>> GetAnnuals() => await _mediator.Send(new GetPlant)
         //{

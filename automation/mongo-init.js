@@ -3,6 +3,11 @@ print('START #################################################################')
 var plants = cat("./docker-entrypoint-initdb.d/plant.json");
 var po = JSON.parse(plants);
 
+po.map(p => {
+    p.Id = `UUID("${p.Id}")`;
+    return p;
+});
+
 // Get the database
 db = new Mongo().getDB("gardeners-multitool");
 

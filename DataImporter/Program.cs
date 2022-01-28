@@ -1,16 +1,30 @@
-﻿using System.ComponentModel;
-using System.Data;
+﻿using System;
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.Threading.Tasks;
 
 namespace DataImporter
 {
     public class Program
     {
-        private const string PlantFolderPath = "Permaculture_Plant_CSVs";
-        private const string ZipcodeHardinessFolderPath = "Zipcode_Hardiness_CSVs";
-        static void Main(string[] args)
+
+        public static async Task<int> Main(params string[] args)
         {
-            //PlantImporter.Run(PlantFolderPath);
-            ZipcodeHardinessImporter.Run(ZipcodeHardinessFolderPath);
+            var command = new RootCommand("Used to import CSVs into our Domain");
+
+            command.AddArgument(new Argument<string>("Plant CSV Folder Path", "Path to the folder that contains the Plant Import CSVs"));
+            command.AddArgument(new Argument<string>("Zipcode Hardiness CSV Folder Path", "Path to the folder that contains the Zipcode Hardiness CSVs"));
+
+            command.SetHandler<string, string>(Convert);
+
+            return await command.InvokeAsync(args);
+        }
+
+        public static void Convert(string plantCSVFolderPath, string zipcodeHardinessCSVFolderPath)
+        {
+            Console.WriteLine("Convert");
+            // PlantImporter.Run(plantCSVFolderPath);
+            // ZipcodeHardinessImporter.Run(zipcodeHardinessCSVFolderPath);
         }
     }
 }

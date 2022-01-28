@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /
 
 # copy csproj and restore as distinct layers
-COPY PlantDataImporter ./PlantDataImporter
+COPY DataImporter ./DataImporter
 COPY GardenersMultitool.Domain ./GardenersMultitool.Domain
 COPY GardenersMultitool.Api ./GardenersMultitool.Api
 
