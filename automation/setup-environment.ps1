@@ -35,6 +35,7 @@ cinst docker
 cinst docker-desktop
 cinst mongodb
 cinst mongodb-compass
+cinst nvm
 $nodejsSearch = ( -split (choco find nodejs-lts) )[2]
 if ($nodejsSearch -eq 0) {
     cinst nodejs-lts
