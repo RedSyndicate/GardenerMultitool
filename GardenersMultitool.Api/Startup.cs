@@ -41,9 +41,11 @@ namespace GardenersMultitool.Api
             })
             .AddSingleton<ICollectionProxy<Plant>, PlantCollection>()
             .AddSingleton<ICollectionProxy<Location>, LocationCollection>()
+            .AddSingleton<ICollectionProxy<ZipcodeHardinessZone>, ZipcodeHardinessCollection>()
             .AddSingleton<DataContext>()
             .AddSwaggerGen(c =>
             {
+                c.UseOneOfForPolymorphism();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
             });
 

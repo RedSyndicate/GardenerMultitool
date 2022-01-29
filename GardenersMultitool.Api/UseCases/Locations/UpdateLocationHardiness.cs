@@ -12,10 +12,12 @@ namespace GardenersMultitool.Api.UseCases.Locations
     public class UpdateLocationHardiness : IRequest<Guid>
     {
         public Guid LocationId { get; set; }
-        public int ZipCode { get; set; }
-        public UpdateLocationHardiness()
-        {
+        public string ZipCode { get; set; }
 
+        public UpdateLocationHardiness(Guid locationId, string zipcode)
+        {
+            LocationId = locationId;
+            ZipCode = zipcode;
         }
     }
 
@@ -29,14 +31,14 @@ namespace GardenersMultitool.Api.UseCases.Locations
         public override async Task<Guid> Handle(UpdateLocationHardiness request, CancellationToken cancellationToken)
         {
             var location = Context.Locations.Find(location => location.Id == request.LocationId).FirstOrDefault();
-            HardinessZone hardiness = HardinessFetchService(request.ZipCode);
+            var hardiness = HardinessFetchService(request.ZipCode);
             //location.UpdateHardiness(hardiness);
             throw new NotImplementedException();
         }
 
-        private HardinessZone HardinessFetchService(int zipCode)
+        private HardinessZone HardinessFetchService(string zipCode)
         {
-            var thing = Context.ZipcodeHardiness.Find(hardyzips => hardyzips.Zipcode.Value == zipCode.ToString()).FirstOrDefault();
+            var thing = Context.ZipcodeHardinessZones.Find(hardyzips => hardyzips.Zipcode.Value == zipCode).FirstOrDefault();
             return new HardinessZone(thing.HardinessZone.Zone);
         }
     }

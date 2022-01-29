@@ -37,6 +37,12 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Docker Build API",
+            "type": "shell",
+            "command": "docker build --pull --rm -f \"Dockerfile\" -t gardenersmultitool-api:latest \".\"",
+            "problemMatcher": []
         }
     ]
 }

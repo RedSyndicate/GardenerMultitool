@@ -1,18 +1,18 @@
-﻿using GardenersMultitool.Domain.Entities;
-using System;
+﻿using System;
+using GardenersMultitool.Domain.Helpers;
 
-namespace GardenersMultitool.Domain.Helpers
+namespace GardenersMultitool.Domain.Entities
 {
-    public class ZipcodeHardiness : IAggregateRoot
+    public class ZipcodeHardinessZone : IAggregateRoot
     {
-        public ZipcodeHardiness(HardinessZone hardinessZone, Zipcode zipcode, string temperatureRange, string zoneTitle)
+        public ZipcodeHardinessZone(Zipcode zipcode, HardinessZone hardinessZone, string temperatureRange, string zoneTitle)
         {
-            HardinessZone = hardinessZone;
             Zipcode = zipcode;
+            HardinessZone = hardinessZone;
             TemperatureRange = temperatureRange;
             ZoneTitle = zoneTitle;
         }
-        public ZipcodeHardiness() { }
+        public ZipcodeHardinessZone() { }
 
         public HardinessZone HardinessZone { get; set; }
         public Zipcode Zipcode { get; set; }

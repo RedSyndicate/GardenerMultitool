@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Extensions;
 using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
 using MediatR;
@@ -30,11 +32,11 @@ namespace GardenersMultitool.Api.UseCases.Plants
 
         public override async Task<List<Plant>> Handle(GetPlantsByPlantType request, CancellationToken cancellationToken)
         {
-            return await Context.Plants
-                .Find(plant =>
-                    plant.PlantType.Label.ToLowerInvariant()
-                         .Equals(request.PlantType.ToLowerInvariant()))
+            var results = await Context.Plants
+                .Find(plant => plant.PlantType == request.PlantType.ToPlantType())
                 .ToListAsync(cancellationToken);
+
+            return results;
         }
     }
 }

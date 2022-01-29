@@ -15,13 +15,13 @@ namespace GardenersMultitool.Api.UseCases.Context
     {
         private readonly ICollectionProxy<Location> _locations;
         private readonly ICollectionProxy<Plant> _plants;
-        private readonly ICollectionProxy<ZipcodeHardiness> _zipcodeHardiness;
+        private readonly ICollectionProxy<ZipcodeHardinessZone> _zipcodeHardiness;
+
         public IMongoCollection<Location> Locations => _locations.Collection;
         public IMongoCollection<Plant> Plants => _plants.Collection;
+        public IMongoCollection<ZipcodeHardinessZone> ZipcodeHardinessZones => _zipcodeHardiness.Collection;
 
-        public IMongoCollection<ZipcodeHardiness> ZipcodeHardiness => _zipcodeHardiness.Collection;
-
-        public DataContext(ICollectionProxy<Location> locations, ICollectionProxy<Plant> plants, ICollectionProxy<ZipcodeHardiness> zipcodeHardiness)
+        public DataContext(ICollectionProxy<Location> locations, ICollectionProxy<Plant> plants, ICollectionProxy<ZipcodeHardinessZone> zipcodeHardiness)
         {
             _locations = locations;
             _plants = plants;
@@ -49,6 +49,12 @@ namespace GardenersMultitool.Api.UseCases.Context
                 map.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
             });
 
+            BsonClassMap.RegisterClassMap<HardinessZoneRange>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(hzr => new HardinessZoneRange(hzr.MaximumHardinessZone, hzr.MinimumHardinessZone));
+            });
+
             BsonClassMap.RegisterClassMap<Plant>(map =>
             {
                 map.AutoMap();
@@ -62,13 +68,33 @@ namespace GardenersMultitool.Api.UseCases.Context
                 map.MapIdProperty(l => l.Id)
                     .SetIdGenerator(new GuidGenerator());
             });
+
+            BsonClassMap.RegisterClassMap<Zipcode>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(z => new Zipcode(z.Value, z.Route));
+            });
+
+            BsonClassMap.RegisterClassMap<HardinessZone>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(hz => new HardinessZone(hz.Zone));
+
+            });
+
+            BsonClassMap.RegisterClassMap<ZipcodeHardinessZone>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(zh => zh.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
         }
 
         public IMongoCollection<T> Collection<T>() where T : IAggregateRoot
         {
             if (typeof(T) == typeof(Location)) return (IMongoCollection<T>)_locations.Collection;
             if (typeof(T) == typeof(Plant)) return (IMongoCollection<T>)_plants.Collection;
-            if (typeof(T) == typeof(ZipcodeHardiness)) return (IMongoCollection<T>)_zipcodeHardiness.Collection;
+            if (typeof(T) == typeof(ZipcodeHardinessZone)) return (IMongoCollection<T>)_zipcodeHardiness.Collection;
             throw new ArgumentException($"Type {typeof(T)} is not mapped to a collection.");
         }
     }
@@ -100,7 +126,7 @@ namespace GardenersMultitool.Api.UseCases.Context
     {
         public PlantCollection(IMongoDatabase database) : base(database) { }
     }
-    public class ZipcodeHardinessCollection : CollectionProxy<ZipcodeHardiness>
+    public class ZipcodeHardinessCollection : CollectionProxy<ZipcodeHardinessZone>
     {
         public ZipcodeHardinessCollection(IMongoDatabase database) : base(database) { }
     }

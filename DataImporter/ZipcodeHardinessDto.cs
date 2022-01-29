@@ -1,8 +1,9 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using System.Globalization;
+using CsvHelper.Configuration.Attributes;
 
 namespace DataImporter
 {
-    public class ZipcodeHardinessDto
+    public class ZipcodeHardinessZoneDto
     {
         //Properties modelled after .csv
         [Name("zipcode")]

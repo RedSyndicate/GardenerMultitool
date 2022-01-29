@@ -1,21 +1,11 @@
 print('START #################################################################');
 
-var plants = cat("./docker-entrypoint-initdb.d/plant.json");
-var po = JSON.parse(plants);
-
-po.map(p => {
-    p.Id = `UUID("${p.Id}")`;
-    return p;
-});
-
 // Get the database
 db = new Mongo().getDB("gardeners-multitool");
 
 // Create the collections
 db.createCollection('plant', { capped: false });
 db.createCollection('location', { capped: false });
-db.createCollection('zipcode_hardiness', { capped: false })
-
-db.plant.insertMany(po);
+db.createCollection('zipcodehardiness', { capped: false })
 
 print('END #################################################################');

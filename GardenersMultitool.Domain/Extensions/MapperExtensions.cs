@@ -3,7 +3,7 @@ using System.Linq;
 using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects.PlantType;
 
-namespace DataImporter.Extensions
+namespace GardenersMultitool.Domain.Extensions
 {
     public static class MapperExtensions
     {
@@ -15,6 +15,11 @@ namespace DataImporter.Extensions
         public static IPlantType ToPlantType(this string plantType) =>
             PlantTypes.Create(plantType);
 
+        public static Zipcode ToZipcode(this string zipcode) =>
+            new(zipcode.PadLeft(5, '0'));
+
+        public static HardinessZone ToHardinessZone(this string hardinessZone) =>
+            new(int.Parse(hardinessZone.Remove(1)));
         public static HardinessZoneRange ToHardinessZoneRange(this string[] tokens)
         {
             try

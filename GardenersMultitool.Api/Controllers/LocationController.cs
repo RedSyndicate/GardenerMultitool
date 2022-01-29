@@ -42,8 +42,8 @@ namespace GardenersMultitool.Api.Controllers
         public async Task<Location> AddPlants(Guid locationId, [FromBody] List<Guid> plantIds) =>
             await _mediator.Send(new AddPlantsToLocation(plantIds, locationId), CancellationToken.None);
 
-        [HttpPost("hardiness_zone")]
-        public async Task<Guid> FetchAndUpdateHardinessZone(UpdateLocationHardiness request) => await _mediator.Send(request);
+        [HttpPost("{locationId:guid}/hardiness_zone/{zipcode}")]
+        public async Task<Guid> FetchAndUpdateHardinessZone(Guid locationId, string zipcode) => await _mediator.Send(new UpdateLocationHardiness(locationId, zipcode));
 
         [HttpGet("{locationId:guid}/recommendations")]
         public async Task<IEnumerable<Plant>> Recommendations(Guid locationId) => await _mediator.Send(new RecommendByLocation(locationId));

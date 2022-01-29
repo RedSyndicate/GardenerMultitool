@@ -5,7 +5,8 @@
       "distributionName": ""
     },
     "DataImporter": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-p Permaculture_Plant_CSVs -zh Zipcode_Hardiness_CSVs"
     }
   }
 }

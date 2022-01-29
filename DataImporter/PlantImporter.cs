@@ -4,10 +4,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
-using DataImporter.Extensions;
 using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Extensions;
 using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
@@ -23,7 +24,7 @@ namespace DataImporter
 {
     public class PlantImporter
     {
-        public static void Run(string folderPath)
+        public static async Task Run(string mongoUrl, string database, string folderPath)
         {
             if (string.IsNullOrEmpty(folderPath))
                 return;
@@ -38,17 +39,11 @@ namespace DataImporter
                 plant.Id = Guid.NewGuid();
             }
 
-            var collection = new MongoClient("mongodb://localhost")
-                .GetDatabase("gardeners-multitool")
+            await new MongoClient(mongoUrl)
+                .GetDatabase(database)
                 .GetCollection<Plant>(nameof(Plant)
-                    .ToLowerInvariant());
-
-            collection
-            .InsertManyAsync(plants);
-
-            var plantsfound = collection.Find(p => true).ToList();
-
-            File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plantsfound));
+                    .ToLowerInvariant())
+                .InsertManyAsync(plants);
         }
 
         private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)

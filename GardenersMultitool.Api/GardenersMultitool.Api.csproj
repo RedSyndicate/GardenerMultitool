@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="CustomConfigurations\" />
+    <Folder Include="UseCases\ZipcodeHardinessZones\" />
   </ItemGroup>
 
 </Project>

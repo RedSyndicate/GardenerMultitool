@@ -4,8 +4,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
+using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Extensions;
 using GardenersMultitool.Domain.Helpers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -17,7 +20,7 @@ namespace DataImporter
 {
     public class ZipcodeHardinessImporter
     {
-        public static void Run(string folderPath)
+        public static async Task Run(string mongoUrl, string database, string folderPath)
         {
             if (string.IsNullOrEmpty(folderPath))
                 return;
@@ -27,9 +30,9 @@ namespace DataImporter
 
             InitializeMappings();
 
-            new MongoClient("mongodb://localhost")
-                .GetDatabase("gardeners-multitool")
-                .GetCollection<ZipcodeHardiness>(nameof(ZipcodeHardiness)
+            await new MongoClient(mongoUrl)
+                .GetDatabase(database)
+                .GetCollection<ZipcodeHardinessZone>(nameof(ZipcodeHardinessZone)
                     .ToLowerInvariant())
                 .InsertManyAsync(zipCodesHardiness);
         }
@@ -39,7 +42,11 @@ namespace DataImporter
             BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-            BsonClassMap.RegisterClassMap<ZipcodeHardiness>();
+            BsonClassMap.RegisterClassMap<ZipcodeHardinessZone>(map =>
+            {
+                map.AutoMap();
+            });
+
             BsonClassMap.RegisterClassMap<HardinessZone>(map =>
             {
                 map.AutoMap();
@@ -52,34 +59,31 @@ namespace DataImporter
                 map.MapCreator(hzr => new HardinessZoneRange(hzr.MaximumHardinessZone, hzr.MinimumHardinessZone));
             });
         }
+
         public class ZipcodeHardinessLoader
         {
             private static MapperConfiguration Config => new(cfg =>
-                cfg.CreateMap<ZipcodeHardinessDto, ZipcodeHardiness>()
-                    .ForMember(
-                        dest => dest.HardinessZone,
-                        opt => opt.MapFrom(
-                            src => src.Zone))
+            {
+                cfg.CreateMap<ZipcodeHardinessZoneDto, ZipcodeHardinessZone>()
                     .ForMember(
                         dest => dest.Zipcode,
                         opt => opt.MapFrom(
-                            src => src.Zipcode))
-                    .ConstructUsing(ConstructHardinessZips));
+                            src => src.Zipcode.ToZipcode()))
+                    .ForMember(
+                        dest => dest.HardinessZone,
+                        opt => opt.MapFrom(
+                            src => src.Zone.ToHardinessZone()))
+                    .ForMember(
+                        dest => dest.TemperatureRange,
+                        opt => opt.MapFrom(
+                            src => src.TemperatureRange))
+                    .ForMember(
+                        dest => dest.ZoneTitle,
+                        opt => opt.MapFrom(
+                            src => src.ZoneTitle));
+            });
 
-            private static ZipcodeHardiness ConstructHardinessZips(
-                ZipcodeHardinessDto dto,
-                ResolutionContext context) =>
-                new(
-                    new HardinessZone(int.Parse(dto.Zone.Remove(1))),
-                    new Zipcode(dto.Zipcode.Length < 5
-                        ? new StringBuilder("0")
-                            .Append(dto.Zipcode)
-                            .ToString()
-                        : dto.Zipcode),
-                    dto.TemperatureRange,
-                    dto.ZoneTitle);
-
-            public IEnumerable<ZipcodeHardiness> Run(string path, string directory)
+            public IEnumerable<ZipcodeHardinessZone> Run(string path, string directory)
             {
                 var mapper = Config.CreateMapper();
 
@@ -87,19 +91,19 @@ namespace DataImporter
                 var files = Directory.GetFiles(csvFolder);
 
                 //make records list
-                var plants = new List<ZipcodeHardiness>();
+                var zipcodeHardinessList = new List<ZipcodeHardinessZone>();
 
                 foreach (var file in files)
                 {
                     using var reader = new StreamReader(Path.Combine(csvFolder, file));
                     using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-                    var records = csv.GetRecords<ZipcodeHardinessDto>();
+                    var records = csv.GetRecords<ZipcodeHardinessZoneDto>();
 
-                    plants.AddRange(records.Select(mapper.Map<ZipcodeHardiness>));
+                    zipcodeHardinessList.AddRange(records.Select(mapper.Map<ZipcodeHardinessZone>));
                 }
 
-                return plants;
+                return zipcodeHardinessList;
             }
         }
 
