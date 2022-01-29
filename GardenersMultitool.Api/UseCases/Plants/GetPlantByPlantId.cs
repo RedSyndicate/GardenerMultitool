@@ -8,23 +8,23 @@ using MongoDB.Driver;
 
 namespace GardenersMultitool.Api.UseCases.Plants
 {
-    public class GetPlantById : IRequest<Plant>
+    public class GetPlantByPlantId : IRequest<Plant>
     {
         public int PlantId { get; }
 
-        public GetPlantById(int id)
+        public GetPlantByPlantId(int id)
         {
             PlantId = id;
         }
     }
 
-    public class GetRequestByIdHandler : RequestHandler<GetPlantById, Plant>
+    public class GetRequestByPlantIdHandler : RequestHandler<GetPlantByPlantId, Plant>
     {
-        public GetRequestByIdHandler(DataContext context) : base(context)
+        public GetRequestByPlantIdHandler(DataContext context) : base(context)
         {
         }
 
-        public override async Task<Plant> Handle(GetPlantById request, CancellationToken cancellationToken) =>
+        public override async Task<Plant> Handle(GetPlantByPlantId request, CancellationToken cancellationToken) =>
             await Context.Plants
                 .Find(plant => plant.PlantId == request.PlantId)
                 .FirstOrDefaultAsync(cancellationToken);
