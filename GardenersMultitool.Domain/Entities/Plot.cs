@@ -1,7 +1,6 @@
-﻿using GardenersMultitool.Domain.ValueObjects;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace GardenersMultitool.Domain
+namespace GardenersMultitool.Domain.Entities
 {
     public class Plot
     {

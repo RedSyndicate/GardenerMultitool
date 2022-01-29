@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { each, onMount } from 'svelte/internal';
 	import { locations, getLocations } from '../lib/location';
-	import Location from '../components/location.svelte';
+	import Location from '$components/location.svelte';
 	onMount(() => {
 		getLocations();
 	});

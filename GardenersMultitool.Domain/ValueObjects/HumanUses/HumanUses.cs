@@ -79,6 +79,7 @@ namespace GardenersMultitool.Domain.ValueObjects.HumanUses
 
         public enum HumanUse
         {
+            //info from PlantDataImporter's  PlantPropertyCSVParser()
             [HumanUse("aromatics/fragrance")]
             AromaticsFragrance,
             [HumanUse("biomass")]

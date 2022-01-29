@@ -4,7 +4,7 @@ using System.Linq;
 using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 
-namespace PlantDataImporter
+namespace DataImporter
 {
     public static class EcologicalFunctions
     {

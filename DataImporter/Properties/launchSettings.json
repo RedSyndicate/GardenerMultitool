@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "DataImporter": {
+      "commandName": "Project",
+      "commandLineArgs": "-p Permaculture_Plant_CSVs -zh Zipcode_Hardiness_CSVs"
+    }
+  }
+}

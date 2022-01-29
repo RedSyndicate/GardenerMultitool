@@ -1,5 +1,8 @@
 import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
+import path from 'path'
+
+const __dirname = path.dirname("./");
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
@@ -22,7 +25,18 @@ const config = {
 			precompress: false
 		}),
 		vite: {
-			plugins: []
+			plugins: [],
+			resolve: {
+				alias: {
+					$lib: path.resolve('./src/lib'),
+					$components: path.resolve('./src/lib/components'),
+					'core-js/modules': path.resolve(
+						__dirname,
+						'..',
+						'node_modules/core-js/modules'
+					),
+				},
+			},
 		}
 	},
 	// hydrate the <div id="svelte"> element in src/app.html

@@ -1,54 +1,125 @@
-﻿using CsvHelper;
-using GardenersMultitool.Domain.ValueObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
+using CsvHelper;
+using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Extensions;
+using GardenersMultitool.Domain.Helpers;
+using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using PlantDataImporter.Extensions;
 using Newtonsoft.Json;
-using MongoDB.Bson.Serialization.IdGenerators;
 
-namespace PlantDataImporter
+namespace DataImporter
 {
-    class Program
+    public class PlantImporter
     {
-        static void Main(string[] args)
+        public static async Task Run(string mongoUrl, string database, string folderPath)
         {
-            if (args.Length < 1)
+            if (string.IsNullOrEmpty(folderPath))
                 return;
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-            var plants = (new Loader().Run(args[0], directory)).ToList();
+            var plants = (new PlantLoader().Run(folderPath, directory)).ToList();
 
-            BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
+            InitializeMappings();
+
+            foreach (var plant in plants)
+            {
+                plant.Id = Guid.NewGuid();
+            }
+
+            await new MongoClient(mongoUrl)
+                .GetDatabase(database)
+                .GetCollection<Plant>(nameof(Plant)
+                    .ToLowerInvariant())
+                .InsertManyAsync(plants);
+        }
+
+        private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)
+        {
+            var plantPropertySB = plants.Aggregate(new StringBuilder(), FlatString);
+            var plantPropertiesHashSet = plantPropertySB.ToString().Split("\r\n").ToHashSet();
+            var plantPropertyList = new List<string>();
+
+            foreach (var property in plantPropertiesHashSet)
+            {
+                if (!plantPropertyList.Contains(property))
+                {
+                    plantPropertyList.Add(property);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            Console.WriteLine(plantPropertyList.ToString());
+
+            return plantPropertiesHashSet;
+        }
+
+        static StringBuilder FlatString(StringBuilder sb, Plant plant)
+        {
+            //for soil pH:  ?? = if the value is null, create new object with -1, -1, else use value as-is
+            //var soilPH = plant.SoilPH ?? new pH(-1, -1);
+            //for plant.Height: if value is null/empty, write "0", else write the attribute.
+            //var plantHeight = string.IsNullOrEmpty(plant.Height) ? "0" : plant.Height;
+
+            var soilMoisture = plant.Name;
+
+            //for List<IEnumerable> Types
+            //attributes.ForEach(plantAttribute => sb.AppendLine(plantAttribute.Label));
+            //return sb;
+            //^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+            return sb.Append(soilMoisture.ToString());
+        }
+
+        private static void InitializeMappings()
+        {
+            BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+
+            foreach (var t in types)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            BsonClassMap.RegisterClassMap<pH>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
+            });
 
             BsonClassMap.RegisterClassMap<Plant>(map =>
             {
                 map.AutoMap();
                 map.MapIdProperty(p => p.Id)
-                .SetIdGenerator(StringObjectIdGenerator.Instance)
-                .SetSerializer(new StringSerializer(BsonType.ObjectId));
+                    .SetIdGenerator(new GuidGenerator());
             });
 
-            new MongoClient("mongodb://localhost")
-                .GetDatabase("gardeners-multitool")
-                .GetCollection<Plant>(nameof(Plant)
-                    .ToLowerInvariant())
-                .InsertManyAsync(plants);
-
-            File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plants));
-            Console.ReadLine();
+            BsonClassMap.RegisterClassMap<Location>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(l => l.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
         }
     }
-    public class Loader
+
+    public class PlantLoader
     {
         private static MapperConfiguration Config => new(cfg =>
             cfg.CreateMap<PlantDto, Plant>()
@@ -116,4 +187,3 @@ namespace PlantDataImporter
         }
     }
 }
-

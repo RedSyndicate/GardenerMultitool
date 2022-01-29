@@ -2,5 +2,6 @@
 {
     public interface IPlantType
     {
+        public string Label => "";
     }
 }

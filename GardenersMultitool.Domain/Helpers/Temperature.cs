@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
-namespace GardenersMultitool.Domain.ValueObjects.Common
+namespace GardenersMultitool.Domain.Helpers
 {
     public enum TemperatureUnit
     {
