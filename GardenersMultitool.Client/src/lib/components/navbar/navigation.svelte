@@ -11,14 +11,17 @@
 		let drawer: any = document.getElementById('nav-drawer');
 		let menu: any = document.getElementById('nav-menu');
 
-		drawer.addEventListener('change', () => {
-			!drawer.checked ? menu.classList.add('hidden') : menu.classList.remove('hidden');
-		});
-
-		menu.addEventListener('click', () => {
+		menu?.addEventListener('click', () => {
 			drawer.click();
 		});
+
+		drawer.addEventListener('change', () => {
+			!drawer.checked ? menu?.classList.add('hidden') : menu?.classList.remove('hidden');
+		});
 	});
+
+	$: {
+	}
 </script>
 
 <div class="shadow-lg drawer mb-2 p-0 bg-base-200">

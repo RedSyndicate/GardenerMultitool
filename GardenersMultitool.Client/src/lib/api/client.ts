@@ -23,15 +23,13 @@ export class LocationClient {
     }
 
     /**
-     * @param id (optional) 
      * @return Success
      */
-    by_id(id: string | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
-        let url_ = this.baseUrl + "/Location/by_id?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+    locationGet(locationId: string , cancelToken?: CancelToken | undefined): Promise<Location> {
+        let url_ = this.baseUrl + "/Location/{locationId}";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -50,11 +48,11 @@ export class LocationClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processBy_id(_response);
+            return this.processLocationGet(_response);
         });
     }
 
-    protected processBy_id(response: AxiosResponse): Promise<Location> {
+    protected processLocationGet(response: AxiosResponse): Promise<Location> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -194,16 +192,14 @@ export class LocationClient {
     }
 
     /**
-     * @param locationId (optional) 
      * @param body (optional) 
      * @return Success
      */
-    add_plants(locationId: string | undefined, body: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
-        let url_ = this.baseUrl + "/Location/add_plants?";
-        if (locationId === null)
-            throw new Error("The parameter 'locationId' cannot be null.");
-        else if (locationId !== undefined)
-            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
+    add_plants(locationId: string, body: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
+        let url_ = this.baseUrl + "/Location/{locationId}/add_plants";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -255,15 +251,71 @@ export class LocationClient {
     }
 
     /**
-     * @param locationId (optional) 
      * @return Success
      */
-    recommendations(locationId: string | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Location/recommendations?";
-        if (locationId === null)
-            throw new Error("The parameter 'locationId' cannot be null.");
-        else if (locationId !== undefined)
-            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
+    hardiness_zone(locationId: string, zipcode: string | null , cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/Location/{locationId}/hardiness_zone/{zipcode}";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
+        if (zipcode === undefined || zipcode === null)
+            throw new Error("The parameter 'zipcode' must be defined.");
+        url_ = url_.replace("{zipcode}", encodeURIComponent("" + zipcode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processHardiness_zone(_response);
+        });
+    }
+
+    protected processHardiness_zone(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<string>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    recommendations(locationId: string , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Location/{locationId}/recommendations";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -332,15 +384,10 @@ export class PlantClient {
     }
 
     /**
-     * @param id (optional) 
      * @return Success
      */
-    plant(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant> {
-        let url_ = this.baseUrl + "/Plant?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+    plantGet(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plant";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -359,11 +406,72 @@ export class PlantClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processPlant(_response);
+            return this.processPlantGet(_response);
         });
     }
 
-    protected processPlant(response: AxiosResponse): Promise<Plant> {
+    protected processPlantGet(response: AxiosResponse): Promise<Plant[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Plant.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<Plant[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<Plant[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    plantGet(plantId: number , cancelToken?: CancelToken | undefined): Promise<Plant> {
+        let url_ = this.baseUrl + "/Plant/{plantId}";
+        if (plantId === undefined || plantId === null)
+            throw new Error("The parameter 'plantId' must be defined.");
+        url_ = url_.replace("{plantId}", encodeURIComponent("" + plantId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPlantGet(_response);
+        });
+    }
+
+    protected processPlantGet(response: AxiosResponse): Promise<Plant> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -390,8 +498,11 @@ export class PlantClient {
     /**
      * @return Success
      */
-    annuals(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/annuals";
+    plantGet(plantType: string | null , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plant/{plantType}";
+        if (plantType === undefined || plantType === null)
+            throw new Error("The parameter 'plantType' must be defined.");
+        url_ = url_.replace("{plantType}", encodeURIComponent("" + plantType));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -410,649 +521,11 @@ export class PlantClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processAnnuals(_response);
+            return this.processPlantGet(_response);
         });
     }
 
-    protected processAnnuals(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    aquatic(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/aquatic";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processAquatic(_response);
-        });
-    }
-
-    protected processAquatic(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    biennial(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/biennial";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processBiennial(_response);
-        });
-    }
-
-    protected processBiennial(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    deciduous_shrub(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/deciduous_shrub";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processDeciduous_shrub(_response);
-        });
-    }
-
-    protected processDeciduous_shrub(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    deciduous_tree(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/deciduous_tree";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processDeciduous_tree(_response);
-        });
-    }
-
-    protected processDeciduous_tree(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    evergreen_shrub(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/evergreen_shrub";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processEvergreen_shrub(_response);
-        });
-    }
-
-    protected processEvergreen_shrub(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    evergreen_tree(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/evergreen_tree";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processEvergreen_tree(_response);
-        });
-    }
-
-    protected processEvergreen_tree(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    fern(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/fern";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processFern(_response);
-        });
-    }
-
-    protected processFern(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    grass(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/grass";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGrass(_response);
-        });
-    }
-
-    protected processGrass(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    mosses(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/mosses";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processMosses(_response);
-        });
-    }
-
-    protected processMosses(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    perennial(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/perennial";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processPerennial(_response);
-        });
-    }
-
-    protected processPerennial(response: AxiosResponse): Promise<Plant[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Plant.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Plant[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Plant[]>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    vine(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/vine";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processVine(_response);
-        });
-    }
-
-    protected processVine(response: AxiosResponse): Promise<Plant[]> {
+    protected processPlantGet(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1121,6 +594,7 @@ export interface IName {
 }
 
 export class IPlantType implements IIPlantType {
+    readonly label?: string | undefined;
 
     constructor(data?: IIPlantType) {
         if (data) {
@@ -1132,6 +606,9 @@ export class IPlantType implements IIPlantType {
     }
 
     init(_data?: any) {
+        if (_data) {
+            (<any>this).label = _data["label"];
+        }
     }
 
     static fromJS(data: any): IPlantType {
@@ -1143,11 +620,13 @@ export class IPlantType implements IIPlantType {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["label"] = this.label;
         return data;
     }
 }
 
 export interface IIPlantType {
+    label?: string | undefined;
 }
 
 export class HardinessZone implements IHardinessZone {

@@ -6,6 +6,6 @@ export const annuals = writable([]);
 
 var _apiClient = new PlantClient(settings.ApiUrl);
 
-const fetchAnnuals = async () => {
-	annuals.set(await _apiClient.annuals());
+export const fetchAnnuals = async () => {
+	annuals.set(await _apiClient.plantGet('annual'));
 };

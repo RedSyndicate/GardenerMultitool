@@ -2,18 +2,25 @@
 	export let plant;
 </script>
 
-<div
-	class="
-	flex p-6 bg-gray-100 text-gray-800 
-	text-center rounded-md 
-	shadow-sm hover:shadow-md flex-col items-center"
->
-	<img
-		class="h-40"
-		src={`https://via.placeholder.com/460x640/333333/cccccc?text=${plant.name.value}`}
-		alt={plant.name.value}
-	/>
-	{plant.name.value}
+<div class="card card-bordered mx-5 card-compact">
+	<figure>
+		<img
+			class="h-fit"
+			src={`https://via.placeholder.com/460x640/333333/cccccc?text=${
+				plant.name.value.split('(')[0]
+			}`}
+			alt={plant.name.value}
+		/>
+	</figure>
+	<div class="card-body">
+		<h2 class="card-title mx-auto">{plant.name.value}</h2>
+	</div>
+	<p class="justify-center text-center">
+		{plant.notes.length > 150 ? `${plant.notes.substr(0, 150 - 1)} ...` : plant.notes}
+	</p>
+	<div class="justify-end card-actions">
+		<button class="btn btn-secondary">More info</button>
+	</div>
 </div>
 
 <slot />

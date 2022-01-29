@@ -11,7 +11,7 @@ export const getLocations = async () => {
 };
 
 export const getLocation = async (id: string) => {
-	return await _apiClient.by_id(id);
+	return await _apiClient.locationGet(id);
 };
 
 export const postLocation = async (location: CreateNewLocation) => {
