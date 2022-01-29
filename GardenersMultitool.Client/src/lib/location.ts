@@ -1,10 +1,10 @@
 import { writable } from 'svelte/store';
-import { LocationClient, CreateNewLocation } from '$lib/api/client';
+import { Client, CreateNewLocation } from '$lib/api/client';
 import settings from '../settings.json';
 
 export const locations = writable([]);
 
-var _apiClient = new LocationClient(settings.ApiUrl);
+var _apiClient = new Client(settings.ApiUrl);
 
 export const getLocations = async () => {
 	locations.set(await _apiClient.locationGet());

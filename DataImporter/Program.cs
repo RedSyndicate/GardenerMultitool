@@ -2,9 +2,17 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using GardenersMultitool.Domain.Entities;
+using GardenersMultitool.Domain.Helpers;
+using GardenersMultitool.Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace DataImporter
 {
@@ -15,6 +23,7 @@ namespace DataImporter
 
         public static async Task<int> Main(params string[] args)
         {
+            InitializeMappings();
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
@@ -23,6 +32,44 @@ namespace DataImporter
             ConfigureCommandLineOptions();
 
             return await serviceProvider.GetService<Program>()?.Run(args)!;
+        }
+
+        private static void InitializeMappings()
+        {
+            BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+
+            foreach (var t in types)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            BsonClassMap.RegisterClassMap<pH>(map =>
+            {
+                map.AutoMap();
+                map.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
+            });
+
+            BsonClassMap.RegisterClassMap<Plant>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(p => p.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
+
+            BsonClassMap.RegisterClassMap<Location>(map =>
+            {
+                map.AutoMap();
+                map.MapIdProperty(l => l.Id)
+                    .SetIdGenerator(new GuidGenerator());
+            });
+
+            BsonClassMap.RegisterClassMap<ZipcodeHardinessZone>(map =>
+            {
+                map.AutoMap();
+            });
         }
 
         private async Task<int> Run(string[] args)

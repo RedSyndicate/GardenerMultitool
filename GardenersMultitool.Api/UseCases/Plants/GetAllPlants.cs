@@ -10,6 +10,12 @@ namespace GardenersMultitool.Api.UseCases.Plants
 {
     public class GetAllPlants : IRequest<IEnumerable<Plant>>
     {
+        public int Total { get; set; }
+
+        public GetAllPlants(int total)
+        {
+            Total = total;
+        }
     }
     public class GetAllRequestsHandler : RequestHandler<GetAllPlants, IEnumerable<Plant>>
     {

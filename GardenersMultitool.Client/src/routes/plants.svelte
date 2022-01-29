@@ -1,10 +1,16 @@
 <script lang="ts">
-	import { each, onMount } from 'svelte/internal';
-	import { annuals, fetchAnnuals } from '$lib/plant';
-	import Plant from '$components/plant.svelte';
+	import { each, object_without_properties, onMount } from 'svelte/internal';
+	import { plants, getAllPlants } from '$lib/plant';
+
+	let total;
+	let totalPerPage;
 
 	onMount(() => {
-		fetchAnnuals();
+		getAllPlants(10);
+		total = $plants.length;
+		totalPerPage = 10;
+
+		console.log(Object.keys($plants));
 	});
 </script>
 
@@ -12,10 +18,20 @@
 	<title>Gardener Multitool</title>
 </svelte:head>
 
-<h1>Plants</h1>
-
-<div class="m-1 grid gap-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-1">
-	{#each $annuals as plant}
-		<Plant {plant} />
-	{/each}
+<div class="mx-5 card card-compact">
+	<h1 class="card-title">Plants</h1>
+	<div class="form-control card-body">
+		<label for="plant-search">Search for plants</label>
+		<input id="plant-search" type="search" class="input input-ghost input-bordered input-primary" />
+	</div>
+</div>
+<hr class="my-5" />
+<div class="card">
+	<div class="btn-group card-actions">
+		<button class="btn">Previous</button>
+		{#each $plants as plant, index}
+			<button class="btn">{index}</button>
+		{/each}
+		<button class="btn">Next</button>
+	</div>
 </div>

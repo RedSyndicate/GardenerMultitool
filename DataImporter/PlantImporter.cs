@@ -9,16 +9,9 @@ using AutoMapper;
 using CsvHelper;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.Extensions;
-using GardenersMultitool.Domain.Helpers;
-using GardenersMultitool.Domain.ValueObjects;
 using GardenersMultitool.Domain.ValueObjects.EcologicalFunctions;
 using GardenersMultitool.Domain.ValueObjects.HumanUses;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 
 namespace DataImporter
 {
@@ -31,8 +24,6 @@ namespace DataImporter
 
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             var plants = (new PlantLoader().Run(folderPath, directory)).ToList();
-
-            InitializeMappings();
 
             foreach (var plant in plants)
             {
@@ -85,38 +76,6 @@ namespace DataImporter
             return sb.Append(soilMoisture.ToString());
         }
 
-        private static void InitializeMappings()
-        {
-            BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-
-            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
-
-            foreach (var t in types)
-            {
-                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
-            }
-
-            BsonClassMap.RegisterClassMap<pH>(map =>
-            {
-                map.AutoMap();
-                map.MapCreator(ph => new pH(ph.MinimumpH, ph.MaximumpH));
-            });
-
-            BsonClassMap.RegisterClassMap<Plant>(map =>
-            {
-                map.AutoMap();
-                map.MapIdProperty(p => p.Id)
-                    .SetIdGenerator(new GuidGenerator());
-            });
-
-            BsonClassMap.RegisterClassMap<Location>(map =>
-            {
-                map.AutoMap();
-                map.MapIdProperty(l => l.Id)
-                    .SetIdGenerator(new GuidGenerator());
-            });
-        }
     }
 
     public class PlantLoader
@@ -143,7 +102,7 @@ namespace DataImporter
                 .ForMember(dest => dest.HardinessZone, opt => opt.MapFrom(src =>
                     src.HardinessZone
                         .Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                        .Select(s => s == "?" ? 0.ToString() : s)
+                        .Select(s => s == "?" ? "0" : s)
                         .ToArray()
                         .ToHardinessZoneRange()))
         );

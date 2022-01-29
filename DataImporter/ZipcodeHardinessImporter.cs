@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.Extensions;
-using GardenersMultitool.Domain.Helpers;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace DataImporter
@@ -28,36 +22,11 @@ namespace DataImporter
             var directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             var zipCodesHardiness = (new ZipcodeHardinessLoader().Run(folderPath, directory)).ToList();
 
-            InitializeMappings();
-
             await new MongoClient(mongoUrl)
                 .GetDatabase(database)
                 .GetCollection<ZipcodeHardinessZone>(nameof(ZipcodeHardinessZone)
                     .ToLowerInvariant())
                 .InsertManyAsync(zipCodesHardiness);
-        }
-
-        private static void InitializeMappings()
-        {
-            BsonSerializer.RegisterIdGenerator(typeof(Guid), new GuidGenerator());
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-
-            BsonClassMap.RegisterClassMap<ZipcodeHardinessZone>(map =>
-            {
-                map.AutoMap();
-            });
-
-            BsonClassMap.RegisterClassMap<HardinessZone>(map =>
-            {
-                map.AutoMap();
-                map.MapCreator(hz => new HardinessZone(hz.Zone));
-
-            });
-            BsonClassMap.RegisterClassMap<HardinessZoneRange>(map =>
-            {
-                map.AutoMap();
-                map.MapCreator(hzr => new HardinessZoneRange(hzr.MaximumHardinessZone, hzr.MinimumHardinessZone));
-            });
         }
 
         public class ZipcodeHardinessLoader

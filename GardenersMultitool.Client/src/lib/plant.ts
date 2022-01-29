@@ -1,11 +1,15 @@
 import { writable } from 'svelte/store';
-import { PlantClient } from '$lib/api/client';
+import { Client, Plant } from '$lib/api/client';
 import settings from '../settings.json';
 
-export const annuals = writable([]);
+export const plants = writable([]);
 
-var _apiClient = new PlantClient(settings.ApiUrl);
+var _apiClient = new Client(settings.ApiUrl);
 
-export const fetchAnnuals = async () => {
-	annuals.set(await _apiClient.plantGet('annual'));
+export const getAllPlants = async (total: number) => {
+	plants.set(await _apiClient.plantGet(total));
+};
+
+export const getPlantByPlantType = async (plantType: string) => {
+	plants.set(await _apiClient.plantGet(plantType));
 };

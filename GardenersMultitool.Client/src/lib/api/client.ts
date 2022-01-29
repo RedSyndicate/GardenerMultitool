@@ -9,7 +9,7 @@
 
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class LocationClient {
+export class Client {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -195,7 +195,7 @@ export class LocationClient {
      * @param body (optional) 
      * @return Success
      */
-    add_plants(locationId: string, body: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
+    locationAddPlants(locationId: string, body: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
         let url_ = this.baseUrl + "/Location/{locationId}/add_plants";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
@@ -222,11 +222,11 @@ export class LocationClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processAdd_plants(_response);
+            return this.processLocationAddPlants(_response);
         });
     }
 
-    protected processAdd_plants(response: AxiosResponse): Promise<Location> {
+    protected processLocationAddPlants(response: AxiosResponse): Promise<Location> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -253,7 +253,7 @@ export class LocationClient {
     /**
      * @return Success
      */
-    hardiness_zone(locationId: string, zipcode: string | null , cancelToken?: CancelToken | undefined): Promise<string> {
+    locationHardinessZone(locationId: string, zipcode: string | null , cancelToken?: CancelToken | undefined): Promise<string> {
         let url_ = this.baseUrl + "/Location/{locationId}/hardiness_zone/{zipcode}";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
@@ -279,11 +279,11 @@ export class LocationClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processHardiness_zone(_response);
+            return this.processLocationHardinessZone(_response);
         });
     }
 
-    protected processHardiness_zone(response: AxiosResponse): Promise<string> {
+    protected processLocationHardinessZone(response: AxiosResponse): Promise<string> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -311,7 +311,7 @@ export class LocationClient {
     /**
      * @return Success
      */
-    recommendations(locationId: string , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+    locationRecommendations(locationId: string , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
         let url_ = this.baseUrl + "/Location/{locationId}/recommendations";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
@@ -334,11 +334,11 @@ export class LocationClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processRecommendations(_response);
+            return this.processLocationRecommendations(_response);
         });
     }
 
-    protected processRecommendations(response: AxiosResponse): Promise<Plant[]> {
+    protected processLocationRecommendations(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -368,26 +368,17 @@ export class LocationClient {
         }
         return Promise.resolve<Plant[]>(<any>null);
     }
-}
-
-export class PlantClient {
-    private instance: AxiosInstance;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
-
-        this.instance = instance ? instance : axios.create();
-
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-
-    }
 
     /**
+     * @param total (optional) 
      * @return Success
      */
-    plantGet(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant";
+    plantGet(total: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plant?";
+        if (total === null)
+            throw new Error("The parameter 'total' cannot be null.");
+        else if (total !== undefined)
+            url_ += "total=" + encodeURIComponent("" + total) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
