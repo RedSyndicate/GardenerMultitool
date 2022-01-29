@@ -32,8 +32,6 @@ namespace DataImporter
                 .GetCollection<ZipcodeHardiness>(nameof(ZipcodeHardiness)
                     .ToLowerInvariant())
                 .InsertManyAsync(zipCodesHardiness);
-
-            Console.ReadLine();
         }
 
         private static void InitializeMappings()

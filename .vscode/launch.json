@@ -11,8 +11,8 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/DataImporter/bin/Debug/net5.0/DataImporter.dll",
             "args": [
-                "--p", "Permaculture_Plants_CSVs", 
-                "--zh", "Zipcode_Hardiness_CSVs"
+                "-p", "Permaculture_Plant_CSVs", 
+                "-zh", "Zipcode_Hardiness_CSVs"
             ],
             "cwd": "${workspaceFolder}/DataImporter",
             "stopAtEntry": false,

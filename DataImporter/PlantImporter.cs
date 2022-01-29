@@ -49,7 +49,6 @@ namespace DataImporter
             var plantsfound = collection.Find(p => true).ToList();
 
             File.WriteAllText(Path.Combine(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\..\\"), "plant.json"), JsonConvert.SerializeObject(plantsfound));
-            Console.ReadLine();
         }
 
         private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)
@@ -70,7 +69,6 @@ namespace DataImporter
                 }
             }
             Console.WriteLine(plantPropertyList.ToString());
-            Console.ReadLine();
 
             return plantPropertiesHashSet;
         }
