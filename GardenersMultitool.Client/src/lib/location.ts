@@ -7,13 +7,13 @@ export const locations = writable([]);
 var _apiClient = new Client(settings.ApiUrl);
 
 export const getLocations = async () => {
-	locations.set(await _apiClient.locationGet());
+	locations.set(await _apiClient.locationsAll());
 };
 
 export const getLocation = async (id: string) => {
-	return await _apiClient.locationGet(id);
+	return await _apiClient.locationsByLocationId(id);
 };
 
 export const postLocation = async (location: CreateNewLocation) => {
-	return await _apiClient.locationPost(location);
+	return await _apiClient.locationsCreate(location);
 };

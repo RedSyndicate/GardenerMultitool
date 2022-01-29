@@ -17,10 +17,17 @@ namespace GardenersMultitool.Api.UseCases.Plants
     public class GetPlantsByPlantType : IRequest<List<Plant>>
     {
         public string PlantType { get; }
+        public int Total { get; set; }
+        public int Page { get; set; }
+        public int PerPage { get; set; }
 
-        public GetPlantsByPlantType(string plantType)
+
+        public GetPlantsByPlantType(string plantType, int total, int page, int perPage)
         {
             PlantType = plantType;
+            Total = total;
+            Page = page;
+            PerPage = perPage;
         }
     }
 

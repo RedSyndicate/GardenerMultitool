@@ -1,40 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using GardenersMultitool.Api.UseCases;
-using GardenersMultitool.Api.UseCases.Context;
 using GardenersMultitool.Api.UseCases.Locations;
 using GardenersMultitool.Domain.Entities;
-using GardenersMultitool.Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
 
 namespace GardenersMultitool.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LocationController : ControllerBase
+    public class LocationsController : ControllerBase
     {
-        private readonly ILogger<LocationController> _logger;
+        private readonly ILogger<LocationsController> _logger;
         private readonly IMediator _mediator;
 
-        public LocationController(ILogger<LocationController> logger, IMediator mediator)
+        public LocationsController(ILogger<LocationsController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
 
-        [HttpGet("{locationId:guid}")]
-        public async Task<Location> GetLocation(Guid locationId) => await _mediator.Send(new GetLocationById(locationId));
-
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IEnumerable<Location>> GetLocations() => await _mediator.Send(new GetAllLocations());
 
-        [HttpPost]
+        [HttpGet("by/locationId/{locationId:guid}")]
+        public async Task<Location> GetLocation(Guid locationId) => await _mediator.Send(new GetLocationById(locationId));
+
+        [HttpPost("create")]
         public async Task<Guid> CreateLocation([FromBody] CreateNewLocation request) =>
             await _mediator.Send(request, CancellationToken.None);
 

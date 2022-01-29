@@ -10,25 +10,25 @@ namespace GardenersMultitool.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PlantController : ControllerBase
+    public class PlantsController : ControllerBase
     {
-        private readonly ILogger<PlantController> _logger;
+        private readonly ILogger<PlantsController> _logger;
         private readonly IMediator _mediator;
 
 
-        public PlantController(ILogger<PlantController> logger, IMediator mediator)
+        public PlantsController(ILogger<PlantsController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
 
-        [HttpGet()]
-        public async Task<IEnumerable<Plant>> GetAllPlants([FromQuery] int total = 50) => await _mediator.Send(new GetAllPlants(total));
+        [HttpGet("all")]
+        public async Task<IEnumerable<Plant>> GetAllPlants([FromQuery] int total = 50, [FromQuery] int page = 1, [FromQuery] int perPage = 10) => await _mediator.Send(new GetAllPlants(total, page, perPage));
 
-        [HttpGet("{plantId:int}")]
+        [HttpGet("by/plantId/{plantId:int}")]
         public async Task<Plant> GetPlantByPlantId(int plantId) => await _mediator.Send(new GetPlantByPlantId(plantId));
 
-        [HttpGet("{plantType}")]
-        public async Task<IEnumerable<Plant>> GetPlantsByPlantType(string plantType) => await _mediator.Send(new GetPlantsByPlantType(plantType));
+        [HttpGet("by/plantType/{plantType}")]
+        public async Task<IEnumerable<Plant>> GetPlantsByPlantType(string plantType, [FromQuery] int total = 50, [FromQuery] int page = 1, [FromQuery] int perPage = 10) => await _mediator.Send(new GetPlantsByPlantType(plantType, total, page, perPage));
     }
 }

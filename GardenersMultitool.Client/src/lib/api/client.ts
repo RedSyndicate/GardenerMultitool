@@ -25,11 +25,8 @@ export class Client {
     /**
      * @return Success
      */
-    locationGet(locationId: string , cancelToken?: CancelToken | undefined): Promise<Location> {
-        let url_ = this.baseUrl + "/Location/{locationId}";
-        if (locationId === undefined || locationId === null)
-            throw new Error("The parameter 'locationId' must be defined.");
-        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
+    locationsAll(  cancelToken?: CancelToken | undefined): Promise<Location[]> {
+        let url_ = this.baseUrl + "/Locations/all";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -48,62 +45,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLocationGet(_response);
+            return this.processLocationsAll(_response);
         });
     }
 
-    protected processLocationGet(response: AxiosResponse): Promise<Location> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = Location.fromJS(resultData200);
-            return Promise.resolve<Location>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<Location>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    locationGet(  cancelToken?: CancelToken | undefined): Promise<Location[]> {
-        let url_ = this.baseUrl + "/Location";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processLocationGet(_response);
-        });
-    }
-
-    protected processLocationGet(response: AxiosResponse): Promise<Location[]> {
+    protected processLocationsAll(response: AxiosResponse): Promise<Location[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -135,11 +81,65 @@ export class Client {
     }
 
     /**
+     * @return Success
+     */
+    locationsByLocationId(locationId: string , cancelToken?: CancelToken | undefined): Promise<Location> {
+        let url_ = this.baseUrl + "/Locations/by/locationId/{locationId}";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processLocationsByLocationId(_response);
+        });
+    }
+
+    protected processLocationsByLocationId(response: AxiosResponse): Promise<Location> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = Location.fromJS(resultData200);
+            return Promise.resolve<Location>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<Location>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
-    locationPost(body: CreateNewLocation | undefined , cancelToken?: CancelToken | undefined): Promise<string> {
-        let url_ = this.baseUrl + "/Location";
+    locationsCreate(body?: CreateNewLocation | undefined , cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/Locations/create";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -162,11 +162,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLocationPost(_response);
+            return this.processLocationsCreate(_response);
         });
     }
 
-    protected processLocationPost(response: AxiosResponse): Promise<string> {
+    protected processLocationsCreate(response: AxiosResponse): Promise<string> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -195,8 +195,8 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    locationAddPlants(locationId: string, body: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
-        let url_ = this.baseUrl + "/Location/{locationId}/add_plants";
+    locationsAddPlants(locationId: string, body?: string[] | null | undefined , cancelToken?: CancelToken | undefined): Promise<Location> {
+        let url_ = this.baseUrl + "/Locations/{locationId}/add_plants";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
         url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
@@ -222,11 +222,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLocationAddPlants(_response);
+            return this.processLocationsAddPlants(_response);
         });
     }
 
-    protected processLocationAddPlants(response: AxiosResponse): Promise<Location> {
+    protected processLocationsAddPlants(response: AxiosResponse): Promise<Location> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -253,8 +253,8 @@ export class Client {
     /**
      * @return Success
      */
-    locationHardinessZone(locationId: string, zipcode: string | null , cancelToken?: CancelToken | undefined): Promise<string> {
-        let url_ = this.baseUrl + "/Location/{locationId}/hardiness_zone/{zipcode}";
+    locationsHardinessZone(locationId: string, zipcode: string | null , cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/Locations/{locationId}/hardiness_zone/{zipcode}";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
         url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
@@ -279,11 +279,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLocationHardinessZone(_response);
+            return this.processLocationsHardinessZone(_response);
         });
     }
 
-    protected processLocationHardinessZone(response: AxiosResponse): Promise<string> {
+    protected processLocationsHardinessZone(response: AxiosResponse): Promise<string> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -311,8 +311,8 @@ export class Client {
     /**
      * @return Success
      */
-    locationRecommendations(locationId: string , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Location/{locationId}/recommendations";
+    locationsRecommendations(locationId: string , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Locations/{locationId}/recommendations";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
         url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
@@ -334,11 +334,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processLocationRecommendations(_response);
+            return this.processLocationsRecommendations(_response);
         });
     }
 
-    protected processLocationRecommendations(response: AxiosResponse): Promise<Plant[]> {
+    protected processLocationsRecommendations(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -371,14 +371,24 @@ export class Client {
 
     /**
      * @param total (optional) 
+     * @param page (optional) 
+     * @param perPage (optional) 
      * @return Success
      */
-    plantGet(total: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant?";
+    plantsAll(total?: number | undefined, page?: number | undefined, perPage?: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plants/all?";
         if (total === null)
             throw new Error("The parameter 'total' cannot be null.");
         else if (total !== undefined)
             url_ += "total=" + encodeURIComponent("" + total) + "&";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (perPage === null)
+            throw new Error("The parameter 'perPage' cannot be null.");
+        else if (perPage !== undefined)
+            url_ += "perPage=" + encodeURIComponent("" + perPage) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -397,11 +407,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processPlantGet(_response);
+            return this.processPlantsAll(_response);
         });
     }
 
-    protected processPlantGet(response: AxiosResponse): Promise<Plant[]> {
+    protected processPlantsAll(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -435,8 +445,8 @@ export class Client {
     /**
      * @return Success
      */
-    plantGet(plantId: number , cancelToken?: CancelToken | undefined): Promise<Plant> {
-        let url_ = this.baseUrl + "/Plant/{plantId}";
+    plantsByPlantId(plantId: number , cancelToken?: CancelToken | undefined): Promise<Plant> {
+        let url_ = this.baseUrl + "/Plants/by/plantId/{plantId}";
         if (plantId === undefined || plantId === null)
             throw new Error("The parameter 'plantId' must be defined.");
         url_ = url_.replace("{plantId}", encodeURIComponent("" + plantId));
@@ -458,11 +468,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processPlantGet(_response);
+            return this.processPlantsByPlantId(_response);
         });
     }
 
-    protected processPlantGet(response: AxiosResponse): Promise<Plant> {
+    protected processPlantsByPlantId(response: AxiosResponse): Promise<Plant> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -487,13 +497,28 @@ export class Client {
     }
 
     /**
+     * @param total (optional) 
+     * @param page (optional) 
+     * @param perPage (optional) 
      * @return Success
      */
-    plantGet(plantType: string | null , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plant/{plantType}";
+    plantsByPlantType(plantType: string | null, total?: number | undefined, page?: number | undefined, perPage?: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plants/by/plantType/{plantType}?";
         if (plantType === undefined || plantType === null)
             throw new Error("The parameter 'plantType' must be defined.");
         url_ = url_.replace("{plantType}", encodeURIComponent("" + plantType));
+        if (total === null)
+            throw new Error("The parameter 'total' cannot be null.");
+        else if (total !== undefined)
+            url_ += "total=" + encodeURIComponent("" + total) + "&";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (perPage === null)
+            throw new Error("The parameter 'perPage' cannot be null.");
+        else if (perPage !== undefined)
+            url_ += "perPage=" + encodeURIComponent("" + perPage) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -512,11 +537,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processPlantGet(_response);
+            return this.processPlantsByPlantType(_response);
         });
     }
 
-    protected processPlantGet(response: AxiosResponse): Promise<Plant[]> {
+    protected processPlantsByPlantType(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {

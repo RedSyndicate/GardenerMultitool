@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { each, object_without_properties, onMount } from 'svelte/internal';
+	import { each, onMount } from 'svelte/internal';
 	import { plants, getAllPlants } from '$lib/plant';
 
-	let total;
-	let totalPerPage;
+	let total: number = 30;
+	let page: number = 1;
+	let perPage: number = 5;
 
+	$: {
+	}
 	onMount(() => {
-		getAllPlants(10);
-		total = $plants.length;
-		totalPerPage = 10;
-
-		console.log(Object.keys($plants));
+		getAllPlants(total, page, perPage);
+		console.log($plants);
 	});
 </script>
 
@@ -19,7 +19,6 @@
 </svelte:head>
 
 <div class="mx-5 card card-compact">
-	<h1 class="card-title">Plants</h1>
 	<div class="form-control card-body">
 		<label for="plant-search">Search for plants</label>
 		<input id="plant-search" type="search" class="input input-ghost input-bordered input-primary" />
@@ -27,11 +26,30 @@
 </div>
 <hr class="my-5" />
 <div class="card">
-	<div class="btn-group card-actions">
-		<button class="btn">Previous</button>
-		{#each $plants as plant, index}
-			<button class="btn">{index}</button>
+	<h1 class="m-5 card-title">Plants</h1>
+	<div class="card-body">
+		{#each Array(total / (total / perPage)) as _, index}
+			<div class="card card-compact card-bordered">
+				<h1 class="mx-3 my-1 card-title">{$plants[index].name.value}</h1>
+				<div class="card-body">
+					{$plants[index].notes.length > 150
+						? `${$plants[index].notes.substring(0, 150)}...`
+						: $plants[index].notes}
+				</div>
+			</div>
 		{/each}
-		<button class="btn">Next</button>
+	</div>
+</div>
+<div class="card card-compact">
+	<div class="btn-group card-actions justify-center">
+		<button class="btn btn-sm">Previous</button>
+		{#each Array(total / perPage) as _, index}
+			{#if page == index + 1}
+				<button class="btn btn-sm btn-active" />
+			{:else}
+				<button class="btn btn-sm">{index + 1}</button>
+			{/if}
+		{/each}
+		<button class="btn btn-sm">Next</button>
 	</div>
 </div>
