@@ -6,10 +6,7 @@ export const plants = writable([]);
 
 var _apiClient = new Client(settings.ApiUrl);
 
-export const getAllPlants = async (total: number) => {
-	plants.set(await _apiClient.plantGet(total));
-};
+export const getAllPlants = async (total: number) => plants.set(await _apiClient.plantGet(total));
 
-export const getPlantByPlantType = async (plantType: string) => {
+export const getPlantByPlantType = async (plantType: string) =>
 	plants.set(await _apiClient.plantGet(plantType));
-};
