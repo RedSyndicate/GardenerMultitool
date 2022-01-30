@@ -23,16 +23,20 @@ namespace GardenersMultitool.Api.Controllers
         }
 
         [HttpGet("all")]
+        [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any)]
         public async Task<IEnumerable<Plant>> GetAllPlants() => await _mediator.Send(new GetAllPlants());
 
         [HttpGet("by/filter")]
+        [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "total", "page", "perPage" })]
         public async Task<IEnumerable<Plant>> GetPlantsByFilter([FromQuery] int total = 50, [FromQuery] int page = 1,
             [FromQuery] int perPage = 10) => await _mediator.Send(new GetAllPlants(total, page, perPage));
 
         [HttpGet("by/plantId/{plantId:int}")]
+        [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any)]
         public async Task<Plant> GetPlantByPlantId(int plantId) => await _mediator.Send(new GetPlantByPlantId(plantId));
 
         [HttpGet("by/plantType/{plantType}")]
-        public async Task<IEnumerable<Plant>> GetPlantsByPlantType(string plantType, [FromQuery] int total = 50, [FromQuery] int page = 1, [FromQuery] int perPage = 10) => await _mediator.Send(new GetPlantsByPlantType(plantType, total, page, perPage));
+        [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any)]
+        public async Task<IEnumerable<Plant>> GetPlantsByPlantType(string plantType) => await _mediator.Send(new GetPlantsByPlantType(plantType));
     }
 }

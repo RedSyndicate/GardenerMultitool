@@ -555,28 +555,13 @@ export class Client {
     }
 
     /**
-     * @param total (optional) 
-     * @param page (optional) 
-     * @param perPage (optional) 
      * @return Success
      */
-    plantsByPlantType(plantType: string | null, total?: number | undefined, page?: number | undefined, perPage?: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plants/by/plantType/{plantType}?";
+    plantsByPlantType(plantType: string | null , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plants/by/plantType/{plantType}";
         if (plantType === undefined || plantType === null)
             throw new Error("The parameter 'plantType' must be defined.");
         url_ = url_.replace("{plantType}", encodeURIComponent("" + plantType));
-        if (total === null)
-            throw new Error("The parameter 'total' cannot be null.");
-        else if (total !== undefined)
-            url_ += "total=" + encodeURIComponent("" + total) + "&";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "page=" + encodeURIComponent("" + page) + "&";
-        if (perPage === null)
-            throw new Error("The parameter 'perPage' cannot be null.");
-        else if (perPage !== undefined)
-            url_ += "perPage=" + encodeURIComponent("" + perPage) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{

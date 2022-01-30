@@ -12,7 +12,6 @@
 <script lang="ts">
 	import { each, onMount } from 'svelte/internal';
 	import { plants, getPlantsAll } from '$lib/plant';
-
 	onMount(() => {
 		console.log($plants);
 	});
@@ -23,41 +22,31 @@
 </svelte:head>
 
 <div class="card">
-	<div class="card-body">
-		<div class="w-full shadow stats">
-			<div class="stat place-items-center place-content-center">
+	<div class="card-body mx-1 my-5 p-0">
+		<div class="w-full shadow-lg stats">
+			<div class="stat">
 				<div class="stat-title">Total</div>
 				<div class="stat-value">{$plants.length}</div>
-			</div>
-			<div class="stat place-items-center place-content-center">
-				<div class="stat-title">Annuals</div>
-				<div class="stat-value">
-					{$plants.flatMap((p) => p.plantType).length}
-				</div>
-			</div>
-			<div class="stat place-items-center place-content-center">
-				<div class="stat-title">Vines</div>
-				<div class="stat-value">
-					{$plants.filter((p) => p.plantType.label.toLowerCase() === 'vine').length}
-				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="card">
-	<div class="card-body">
-		<div class="w-full shadow stats">
-			<div class="stat place-items-center place-content-center">
+	<div class="card-body mx-1 my-5 p-0">
+		<div class="w-full shadow-lg stats">
+			<div class="stat">
 				<div class="stat-title">Total</div>
 				<div class="stat-value">{$plants.length}</div>
 			</div>
-			<div class="stat place-items-center place-content-center">
+			<div class="stat">
 				<div class="stat-title">Annuals</div>
 				<div class="stat-value">
-					{$plants.filter((p) => p.plantType.label.toLowerCase() === 'annual').length}
+					{$plants.map((p) => {
+						return p.plantType;
+					}).length}
 				</div>
 			</div>
-			<div class="stat place-items-center place-content-center">
+			<div class="stat">
 				<div class="stat-title">Vines</div>
 				<div class="stat-value">
 					{$plants.filter((p) => p.plantType.label.toLowerCase() === 'vine').length}

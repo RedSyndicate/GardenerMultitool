@@ -47,7 +47,8 @@ namespace GardenersMultitool.Api
             {
                 c.UseOneOfForPolymorphism();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GardenersMultitool.Api", Version = "v1" });
-            });
+            })
+            .AddResponseCaching();
 
             services.AddControllers();
         }
@@ -63,6 +64,7 @@ namespace GardenersMultitool.Api
                     options.AllowAnyOrigin();
                 });
             }
+            app.UseResponseCaching();
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GardenersMultitool.Api v1"));
@@ -71,6 +73,7 @@ namespace GardenersMultitool.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {
