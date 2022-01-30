@@ -11,9 +11,16 @@ namespace GardenersMultitool.Api.UseCases.Plants
 {
     public class GetAllPlants : IRequest<IEnumerable<Plant>>
     {
-        public int Total { get; set; }
-        public int Page { get; set; }
-        public int PerPage { get; set; }
+        public int? Total { get; set; }
+        public int? Page { get; set; }
+        public int? PerPage { get; set; }
+
+        public GetAllPlants()
+        {
+            Total = null;
+            Page = null;
+            PerPage = null;
+        }
 
         public GetAllPlants(int total, int page, int perPage)
         {
@@ -27,7 +34,7 @@ namespace GardenersMultitool.Api.UseCases.Plants
         public GetAllRequestsHandler(DataContext context) : base(context) { }
 
         public override async Task<IEnumerable<Plant>> Handle(GetAllPlants request, CancellationToken cancellationToken) =>
-            await Context.Plants.Find(plant => true).Skip(request.Page * request.PerPage).Limit(request.Total).ToListAsync(cancellationToken);
+            await Context.Plants.Find(plant => true).Skip(request.Page ?? 0 * request.PerPage ?? 0).Limit(request.Total).ToListAsync(cancellationToken);
 
     }
 }

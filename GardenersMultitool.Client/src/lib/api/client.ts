@@ -370,13 +370,71 @@ export class Client {
     }
 
     /**
+     * @return Success
+     */
+    plantsAll(  cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plants/all";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPlantsAll(_response);
+        });
+    }
+
+    protected processPlantsAll(response: AxiosResponse): Promise<Plant[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Plant.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<Plant[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<Plant[]>(<any>null);
+    }
+
+    /**
      * @param total (optional) 
      * @param page (optional) 
      * @param perPage (optional) 
      * @return Success
      */
-    plantsAll(total?: number | undefined, page?: number | undefined, perPage?: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
-        let url_ = this.baseUrl + "/Plants/all?";
+    plantsByFilter(total?: number | undefined, page?: number | undefined, perPage?: number | undefined , cancelToken?: CancelToken | undefined): Promise<Plant[]> {
+        let url_ = this.baseUrl + "/Plants/by/filter?";
         if (total === null)
             throw new Error("The parameter 'total' cannot be null.");
         else if (total !== undefined)
@@ -407,11 +465,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processPlantsAll(_response);
+            return this.processPlantsByFilter(_response);
         });
     }
 
-    protected processPlantsAll(response: AxiosResponse): Promise<Plant[]> {
+    protected processPlantsByFilter(response: AxiosResponse): Promise<Plant[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
