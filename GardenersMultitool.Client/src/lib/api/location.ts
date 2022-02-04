@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { Client, CreateNewLocation } from '$lib/api/client';
-import settings from '../settings.json';
+import settings from '../../settings.json';
 
 export const locations = writable([]);
 

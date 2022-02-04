@@ -27,9 +27,9 @@ namespace GardenersMultitool.Api.Controllers
         public async Task<IEnumerable<Plant>> GetAllPlants() => await _mediator.Send(new GetAllPlants());
 
         [HttpGet("by/filter")]
-        [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "total", "page", "perPage" })]
-        public async Task<IEnumerable<Plant>> GetPlantsByFilter([FromQuery] int total = 50, [FromQuery] int page = 1,
-            [FromQuery] int perPage = 10) => await _mediator.Send(new GetAllPlants(total, page, perPage));
+        [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "filter", "pagination" })]
+        public async Task<IEnumerable<Plant>> GetPlantsByFilter([FromQuery] PlantByFilter filter, [FromQuery] Pagination pagination) =>
+            await _mediator.Send(new GetPlantsByFilter(filter, pagination));
 
         [HttpGet("by/plantId/{plantId:int}")]
         [ResponseCache(Duration = 43200, Location = ResponseCacheLocation.Any)]
