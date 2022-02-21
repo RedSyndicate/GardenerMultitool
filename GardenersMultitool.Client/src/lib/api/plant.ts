@@ -11,8 +11,9 @@ export const getPlantsAll = async () => {
 };
 
 export const getPlantByPlantId = async (plantId: number) => {
-	plantStore.set(await _apiClient.plantsByPlantId(plantId));
+	plantStore.set([await _apiClient.plantsByPlantId(plantId)]);
 };
+
 export const getPlantsByFilter = async (total: number, page: number, perPage: number) =>
 	plantStore.set(await _apiClient.plantsByFilter(total, page, perPage));
 

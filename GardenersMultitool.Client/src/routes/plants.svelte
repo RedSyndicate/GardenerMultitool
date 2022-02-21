@@ -11,7 +11,7 @@
 
 <script lang="ts">
 	import { each, onMount } from 'svelte/internal';
-	import { plants, getPlantsAll } from '$lib/plant';
+	import { plantStore as plants, getPlantsAll } from '$lib/api/plant';
 	import Plant from '$components/plant.svelte';
 	import Pagination from '$components/pagination.svelte';
 

@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build solution",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -14,7 +14,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "publish solution",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -26,7 +26,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch",
+            "label": "watch solution",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -42,6 +42,12 @@
             "label": "Docker Build API",
             "type": "shell",
             "command": "docker build --pull --rm -f \"Dockerfile\" -t gardenersmultitool-api:latest \".\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build Client",
+            "type": "shell",
+            "command": "docker build --pull --rm -f \"GardenersMultitool.Client\\Dockerfile\" -t gardenersmultitool:latest \"GardenersMultitool.Client\"",
             "problemMatcher": []
         }
     ]
