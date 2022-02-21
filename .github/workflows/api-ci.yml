@@ -4,20 +4,20 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'GardenersMultitool.Client/**'
+      - "GardenersMultitool.Client/**"
   pull_request:
     branches: [main]
     paths-ignore:
-      - 'GardenersMultitool.Client/**'
+      - "GardenersMultitool.Client/**"
 
 jobs:
   build:
     name: Build API
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.x'
-    - run: dotnet build
-    - run: dotnet test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.x"
+      - run: dotnet build
+      - run: dotnet test
