@@ -1,11 +1,9 @@
-import { writable } from 'svelte/store';
-import { PlantClient } from '$lib/api/client';
-import settings from '../settings.json';
+import type { Plant } from '@prisma/client';
+import { writable, type Writable } from 'svelte/store';
+import { db } from './db';
 
-export const annuals = writable([]);
+export const plants: Writable<Plant[]> = writable([]);
 
-var _apiClient = new PlantClient(settings.ApiUrl);
-
-const fetchAnnuals = async () => {
-	annuals.set(await _apiClient.annuals());
-};
+export const fetch = async () => {
+	plants.set(await db.plant.findMany());
+}

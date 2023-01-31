@@ -1,9 +1,4 @@
 <script lang="ts">
-	import { each, onMount } from 'svelte/internal';
-	import { locations, getLocations } from '../lib/location';
-	onMount(() => {
-		getLocations();
-	});
 </script>
 
 <svelte:head>
@@ -11,4 +6,3 @@
 </svelte:head>
 
 <h1>Dashboard</h1>
- 

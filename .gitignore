@@ -399,4 +399,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # CSV Data Files
-*.csv
+**/Permaculture_Plant_CSVs/*.csv
+**/Permaculture_Plant_JSON/*.json

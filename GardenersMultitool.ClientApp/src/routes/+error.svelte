@@ -11,11 +11,11 @@
 	<h1>{$page.status}</h1>
 
 	{#if dev && $page.error?.message}
-		<p>{$page.error.message}</p>
+		<pre>{$page.error.message}</pre>
 	{/if}
 </div>
 
-<style>
+<style scoped>
 	h1,
 	p {
 		margin: 0 auto;

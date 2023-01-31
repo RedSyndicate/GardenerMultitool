@@ -1,11 +1,11 @@
 <script lang="ts">
-	import SvgIcon from '@jamescoyle/svelte-icon';
-	import { mdiMenu, mdiAccount, mdiFolder } from '@mdi/js';
+	import Menu from 'svelte-material-icons/Menu.svelte';
+
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { backInOut } from 'svelte/easing';
 
-	let visible;
+	let visible = false;
 
 	onMount(() => {
 		let drawer: any = document.getElementById('nav-drawer');
@@ -27,7 +27,7 @@
 		<div class="w-full navbar">
 			<div class="flex-none">
 				<label for="nav-drawer" class="btn btn-square btn-ghost">
-					<SvgIcon type="mdi" path={mdiMenu} />
+					<Menu />
 				</label>
 			</div>
 		</div>

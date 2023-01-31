@@ -3,6 +3,7 @@ using System.Linq;
 using GardenersMultitool.Domain.Entities;
 using GardenersMultitool.Domain.Helpers;
 using GardenersMultitool.Domain.ValueObjects;
+using GardenersMultitool.Domain.ValueObjects.PlantType;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -36,9 +37,15 @@ namespace GardenersMultitool.Api.UseCases.Context
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 
-            var types = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+            var plantAttributeTypes = typeof(IPlantAttribute).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantAttribute)));
+            var plantTypes = typeof(IPlantType).Assembly.GetTypes().Where(t => t.IsClass && t.IsAssignableTo(typeof(IPlantType)));
 
-            foreach (var t in types)
+            foreach (var t in plantTypes)
+            {
+                BsonClassMap.RegisterClassMap(new BsonClassMap(t));
+            }
+
+            foreach (var t in plantAttributeTypes)
             {
                 BsonClassMap.RegisterClassMap(new BsonClassMap(t));
             }
@@ -60,6 +67,7 @@ namespace GardenersMultitool.Api.UseCases.Context
                 map.AutoMap();
                 map.MapIdProperty(p => p.Id)
                     .SetIdGenerator(new GuidGenerator());
+                map.AddKnownType(typeof(Annual));
             });
 
             BsonClassMap.RegisterClassMap<Location>(map =>
