@@ -52,4 +52,26 @@ model Plant {
   SoilMoisture         String
   MinimumSoilpH        Float
   MaximumSoilpH        Float
+
+  PlantLocation PlantLocation[]
+}
+
+model PlantLocation {
+  Id String @id @default(uuid())
+
+  Plant      Plant    @relation(fields: [plantId], references: [Id])
+  Location   Location @relation(fields: [locationId], references: [Id])
+  plantId    String
+  locationId String
+}
+
+model Location {
+  Id            String  @id @default(uuid())
+  Name          String
+  HardinessZone Int
+  pH            Float
+  Area          Decimal
+  Compaction    Boolean
+
+  PlantLocation PlantLocation[]
 }
