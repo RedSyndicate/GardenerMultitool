@@ -1,39 +1,17 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import {
-		// Utilities
-		createDataTableStore,
-		dataTableHandler,
-		// Svelte Actions
-		tableInteraction,
-		tableA11y,
-		Paginator
-	} from '@skeletonlabs/skeleton';
-
-	import Plant from '$components/plant.svelte';
-	import ArrowBottomLeft from 'svelte-material-icons/ArrowBottomLeft.svelte';
-
+	import { plants } from '$lib/stores/plant';
+	import { DataHandler, Datatable, Th, ThFilter } from '@vincjo/datatables';
 	export let data: PageData;
+	plants.set(data.plants);
 
-	const dataTableStore = createDataTableStore(
-		// Pass your source data here:
-		data.plants,
-		// Provide optional settings:
-		{
-			// The current search term.
-			search: '',
-			// The current sort key.
-			sort: 'Name',
-			// Paginator component settings.
-			pagination: { offset: 0, limit: 5, size: 0, amounts: [5, 10, 15] }
-		}
-	);
+	const handler = new DataHandler($plants, { rowsPerPage: 10 });
+	const rows = handler.getRows();
+	handler.sortAsc("Id")
+	const selected = handler.getSelected();
+	const isAllSelected = handler.isAllSelected();
 
-	// This automatically handles search, sort, etc when the model updates.
-	dataTableStore.subscribe((model) => dataTableHandler(model));
-
-	$: dataTableStore.updateSource(data.plants);
-	$: console.log(data.plants);
+	$: $plants, handler.setRows($plants);
 </script>
 
 <svelte:head>
@@ -42,94 +20,93 @@
 
 <div
 	class="card rounded-none
-			m-0 p-5 
-			overflow-x-scroll overflow-y-scroll 
+			m-0 p-5
 			space-y-1
 			"
 >
 	<h1>Plants</h1>
-	<div class="w-64">
-		<input bind:value={$dataTableStore.search} type="search" placeholder="Search..." />
-	</div>
 	<div class="table-container space-y-1">
-		<table
-			class="table table-hover table-compact table-fixed"
-			role="grid"
-			use:tableA11y
-			use:tableInteraction
-		>
-			<thead
-				on:click={(e) => {
-					dataTableStore.sort(e);
-				}}
-				on:keypress
-			>
-				<tr>
-					<th>
-						<input
-							type="checkbox"
-							on:click={(e) => {
-								dataTableStore.selectAll(e.currentTarget.checked);
-							}}
-						/>
-					</th>
-					<th data-sort="PlantId">Id</th>
-					<th class="truncate" data-sort="Name" colspan="2">Name</th>
-					<th class="truncate" data-sort="ScientificName" colspan="2">Scientific Name</th>
-					<th class="truncate">Type</th>
-					<th class="truncate">Binomial</th>
-					<th class="truncate" data-sort="MinimumHardinessZone">Hardiness Zone (min)</th>
-					<th class="truncate" data-sort="MaximumHardinessZone">Hardiness Zone (max)</th>
-					<th class="truncate" data-sort="MinimumSoilpH">Soil pH (min)</th>
-					<th class="truncate" data-sort="MaximumSoilpH">Soil pH (max)</th>
-					<th class="truncate" data-sort="Height">Height</th>
-					<!-- <th data-sort="Notes">Notes</th> -->
-				</tr>
-			</thead>
-			<tbody>
-				{#each $dataTableStore.filtered as row, rowIndex}
-					<tr class:table-row-checked={row.dataTableChecked} aria-rowindex={rowIndex + 1}>
-						<td role="gridcell" aria-colindex={1} tabindex="0">
-							<input type="checkbox" bind:checked={row.dataTableChecked} />
-						</td>
-						<td class="truncate" role="gridcell" aria-colindex={2} tabindex="0">{row.PlantId}</td>
-						<td class="truncate" role="gridcell" aria-colindex={3} tabindex="0" colspan="2"
-							>{row.Name}</td
-						>
-						<td class="truncate " role="gridcell" aria-colindex={4} tabindex="0" colspan="2"
-							>{row.ScientificName}</td
-						>
-						<td class="truncate" role="gridcell" aria-colindex={5} tabindex="0">{row.PlantType}</td>
-						<td class="truncate" role="gridcell" aria-colindex={6} tabindex="0">{row.Binomial}</td>
-						<td class="truncate " role="gridcell" aria-colindex={7} tabindex="0">
-							{row.MinimumHardinessZone}
-						</td>
-						<td class="truncate " role="gridcell" aria-colindex={8} tabindex="0">
-							{row.MaximumHardinessZone}
-						</td>
-						<td class="truncate " role="gridcell" aria-colindex={9} tabindex="0">
-							{row.MinimumSoilpH}
-						</td>
-						<td class="truncate " role="gridcell" aria-colindex={10} tabindex="0">
-							{row.MaximumSoilpH}
-						</td>
-						<td class="truncate " role="gridcell" aria-colindex={11} tabindex="0">
-							{row.Height}
-						</td>
-
-						<!-- <td role="gridcell" aria-colindex={4} tabindex="0">{row.Notes}</td> -->
+		<Datatable {handler}>
+			<table class="table table-hover table-compact table-fixed" role="grid">
+				<thead>
+					<tr>
+						<th class="w-1">
+							<input
+								type="checkbox"
+								on:click={() => handler.selectAll({ selectBy: 'Id' })}
+								checked={$isAllSelected}
+							/>
+						</th>
+						<Th {handler} orderBy="PlantId">Id</Th>
+						<Th {handler} orderBy="Name">Name</Th>
+						<Th {handler} orderBy="ScientificName">Scientific Name</Th>
+						<Th {handler}>Type</Th>
+						<Th {handler}>Binomial</Th>
+						<Th {handler}>Hardiness Zone (min)</Th>
+						<Th {handler}>Hardiness Zone (max)</Th>
+						<Th {handler}>Soil pH (min)</Th>
+						<Th {handler}>Soil pH (max)</Th>
+						<Th {handler}>Height</Th>
+						<!-- <th data-sort="Notes">Notes</th> -->
 					</tr>
-				{/each}
-			</tbody>
-		</table>
+					<tr>
+						<th />
+						<ThFilter {handler} filterBy="PlantId" />
+						<ThFilter {handler} filterBy="Name" />
+						<ThFilter {handler} filterBy="ScientificName" />
+						<ThFilter {handler} filterBy="PlantType" />
+						<ThFilter {handler} filterBy="Binomial" />
+						<ThFilter {handler} filterBy="MinimumHardinessZone" />
+						<ThFilter {handler} filterBy="MaximumHardinessZone" />
+						<ThFilter {handler} filterBy="MinimumSoilpH" />
+						<ThFilter {handler} filterBy="MaximumSoilpH" />
+						<ThFilter {handler} filterBy="Height" />
+					</tr>
+				</thead>
+				<tbody>
+					{#each $rows as row, rowIndex}
+						<tr class:active={$selected.includes(row.Id)} aria-rowindex={rowIndex + 1}>
+							<td class="selection">
+								<input
+									type="checkbox"
+									on:click={() => handler.select(row.Id)}
+									checked={$selected.includes(row.Id)}
+								/>
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={2} tabindex="0">
+								{row.PlantId}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={3} tabindex="0">
+								{row.Name}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={4} tabindex="0">
+								{row.ScientificName}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={5} tabindex="0">
+								{row.PlantType}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={6} tabindex="0">
+								{row.Binomial}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={7} tabindex="0">
+								{row.MinimumHardinessZone}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={8} tabindex="0">
+								{row.MaximumHardinessZone}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={9} tabindex="0">
+								{row.MinimumSoilpH}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={10} tabindex="0">
+								{row.MaximumSoilpH}
+							</td>
+							<td class="truncate" role="gridcell" aria-colindex={11} tabindex="0">
+								{row.Height}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</Datatable>
 	</div>
-	{#if $dataTableStore.pagination}
-		<div>
-			<Paginator
-				bind:settings={$dataTableStore.pagination}
-				amountText="Plants"
-				buttonClasses="btn-icon variant-filled-primary"
-			/>
-		</div>
-	{/if}
 </div>
