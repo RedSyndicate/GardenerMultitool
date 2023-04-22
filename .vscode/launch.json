@@ -34,19 +34,19 @@
                 "run",
                 "dev"
             ],
-            "localRoot": "${workspaceFolder}\\GardenersMultitool.Client",
+            "localRoot": "${workspaceFolder}\\GardenersMultitool.ClientApp",
             "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         },
         {
             "name": "Launch Edge",
             "request": "launch",
-            "type": "pwa-msedge",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}\\GardenersMultitool.Client\\dist"
+            "type": "msedge",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}\\GardenersMultitool.ClientApp\\dist"
         },
     ]
 }
