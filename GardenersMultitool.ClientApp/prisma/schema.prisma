@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlantType {
+  Annual
+  Aquatic
+  Biennial
+  DeciduousShrub
+  DeciduousTree
+  EvergreenShrub
+  EvergreenTree
+  Fern
+  Grass
+  Mosses
+  Perennial
+  Vine
+}
+
+model Plant {
+  Id                   String    @id @default(uuid())
+  PlantId              Int       @unique
+  Name                 String
+  ScientificName       String
+  Binomial             String
+  PlantType            PlantType
+  Height               Int
+  Spread               Int
+  RootDepth            Int
+  SeasonalInterest     String
+  Notes                String
+  FlowerColor          String
+  RootType             String
+  BloomTime            String
+  FruitTime            String
+  Texture              String
+  Form                 String
+  GrowthRate           String
+  InsectPredation      String
+  Disease              String
+  LightRequired        String
+  MinimumHardinessZone Int
+  MaximumHardinessZone Int
+  SoilMoisture         String
+  MinimumSoilpH        Float
+  MaximumSoilpH        Float
+
+  PlantLocation PlantLocation[]
+}
+
+model PlantLocation {
+  Id String @id @default(uuid())
+
+  Plant      Plant    @relation(fields: [plantId], references: [Id])
+  Location   Location @relation(fields: [locationId], references: [Id])
+  plantId    String
+  locationId String
+}
+
+model Location {
+  Id            String  @id @default(uuid())
+  Name          String
+  HardinessZone Int
+  pH            Float
+  Area          Decimal
+  Compaction    Boolean
+
+  PlantLocation PlantLocation[]
+}

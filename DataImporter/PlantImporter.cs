@@ -39,11 +39,13 @@ namespace DataImporter
                 plant.Id = Guid.NewGuid();
             }
 
-            await new MongoClient(mongoUrl)
-                .GetDatabase(database)
-                .GetCollection<Plant>(nameof(Plant)
-                    .ToLowerInvariant())
-                .InsertManyAsync(plants);
+            var mongoClient = new MongoClient(mongoUrl);
+
+            await mongoClient
+            .GetDatabase(database)
+            .GetCollection<Plant>(nameof(Plant)
+                .ToLowerInvariant())
+            .InsertManyAsync(plants);
         }
 
         private static HashSet<string> PlantPropertyCSVParser(IEnumerable<Plant> plants)

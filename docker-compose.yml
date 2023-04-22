@@ -2,15 +2,15 @@ version: '3.1'
 services:
   web:
     container_name: web
-    image: gardenersmultitool
+    image: gardenermultitool
     restart: always
     ports:
-      - 80:80
+      - 8080:8080
     depends_on: 
       - api
   api:
     container_name: api
-    image: gardenersmultitool-api
+    image: gardenermultitool-api
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
