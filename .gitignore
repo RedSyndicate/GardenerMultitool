@@ -401,3 +401,5 @@ FodyWeavers.xsd
 # CSV Data Files
 **/Permaculture_Plant_CSVs/*.csv
 **/Permaculture_Plant_JSON/*.json
+
+.yarn
