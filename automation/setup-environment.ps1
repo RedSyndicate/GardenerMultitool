@@ -16,7 +16,7 @@
 
 # Install Chocolatey
 Write-Host "Installing Chocolatey ..."
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
 # Update Chocolatey
 Write-Host "Upgrading Chocolatey ..."
@@ -26,9 +26,9 @@ Write-Host "Installing Development Tools ..."
 cinst git
 cinst visualstudio2022community
 cinst visualstudio2022buildtools
-cinst dotnet-6.0-aspnetruntime
-cinst dotnet-6.0-runtime
-cinst dotnet-6.0-sdk
+cinst dotnet-7.0-aspnetruntime
+cinst dotnet-7.0-runtime
+cinst dotnet-7.0-sdk
 cinst vscode
 cinst wsl2
 cinst docker
