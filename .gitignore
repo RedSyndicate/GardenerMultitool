@@ -403,3 +403,4 @@ FodyWeavers.xsd
 **/Permaculture_Plant_JSON/*.json
 
 .yarn
+https.cer
